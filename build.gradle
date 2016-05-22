@@ -33,6 +33,10 @@ repositories {
 		name 'caseif'
 		url 'http://repo.caseif.net/content/groups/public/'
 	}
+    maven {
+        name 'minecrell'
+        url 'http://repo.minecrell.net/releases'
+    }
 }
 
 ext {
@@ -51,7 +55,8 @@ ext {
 
 dependencies {
     compile 'org.spongepowered:spongeapi:4.0.3'
-	compile 'net.caseif.flint.common:flintcommon:' + commonVersion
+	compile "net.caseif.flint.common:flintcommon:${commonVersion}"
+    compile 'net.minecrell.mcstats:statslite-sponge:0.2.2'
 
     checkstyle 'org.spongepowered:checkstyle:6.1.1-sponge1'
 }
@@ -96,6 +101,8 @@ processResources {
 
 shadowJar {
     classifier = ''
+
+    relocate 'net.minecrell.mcstats', 'net.caseif.inferno.mcstats'
 }
 
 task sourceJar(type: Jar) {

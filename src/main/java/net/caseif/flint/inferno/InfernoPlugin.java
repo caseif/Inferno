@@ -25,7 +25,10 @@
 package net.caseif.flint.inferno;
 
 import com.google.inject.Inject;
+import net.minecrell.mcstats.SpongeStatsLite;
 import org.slf4j.Logger;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 /**
@@ -37,12 +40,16 @@ public final class InfernoPlugin {
 
     private static InfernoPlugin instance;
 
-    private final Logger logger;
+    @Inject private SpongeStatsLite stats;
+    @Inject private Logger logger;
 
-    @Inject
-    public InfernoPlugin(Logger logger) {
+    public InfernoPlugin() {
         instance = this;
-        this.logger = logger;
+    }
+
+    @Listener
+    public void onPreInitialize(GamePreInitializationEvent event) {
+        this.stats.start();
     }
 
     /**
