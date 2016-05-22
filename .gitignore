@@ -92,8 +92,3 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
-
-
-### Electrum ###
-FlintCommon/
-!lib/FlintCommon

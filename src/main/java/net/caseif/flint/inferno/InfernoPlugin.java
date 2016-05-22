@@ -31,7 +31,7 @@ import org.spongepowered.api.plugin.Plugin;
 /**
  * The Inferno Sponge plugin.
  */
-@Plugin(id = "net.caseif.flint.inferno", name = "Inferno", version = "1.2.0-SNAPSHOT",
+@Plugin(id = "inferno", name = "Inferno",
         description = "The Sponge implementation of the Flint engine.")
 public final class InfernoPlugin {
 
