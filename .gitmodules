@@ -1,0 +1,3 @@
+[submodule "lib/FlintCommon"]
+	path = lib/FlintCommon
+	url = https://github.com/caseif/FlintCommon.git
