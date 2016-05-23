@@ -25,8 +25,10 @@
 package net.caseif.flint.inferno;
 
 import com.google.inject.Inject;
+import net.caseif.flint.inferno.listener.misc.LobbyListener;
 import net.minecrell.mcstats.SpongeStatsLite;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
@@ -34,7 +36,8 @@ import org.spongepowered.api.plugin.Plugin;
 /**
  * The Inferno Sponge plugin.
  */
-@Plugin(id = "inferno", name = "Inferno",
+@Plugin(id = "inferno",
+        name = "Inferno",
         description = "The Sponge implementation of the Flint engine.")
 public final class InfernoPlugin {
 
@@ -50,6 +53,9 @@ public final class InfernoPlugin {
     @Listener
     public void onPreInitialize(GamePreInitializationEvent event) {
         this.stats.start();
+
+        // Register event listeners
+        Sponge.getEventManager().registerListeners(this, new LobbyListener());
     }
 
     /**
