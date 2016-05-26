@@ -28,6 +28,7 @@ import net.caseif.flint.FlintCore;
 import net.caseif.flint.common.CommonCore;
 import net.caseif.flint.common.component.CommonComponent;
 import net.caseif.flint.common.util.agent.chat.IChatAgent;
+import net.caseif.flint.inferno.util.agent.InfernoChatAgent;
 import net.caseif.flint.minigame.Minigame;
 
 import org.apache.commons.lang3.NotImplementedException;
@@ -37,6 +38,8 @@ import org.apache.commons.lang3.StringUtils;
  * The Sponge implementation of {@link FlintCore}.
  */
 public class InfernoCore extends CommonCore {
+
+    private static final InfernoChatAgent CHAT_AGENT = new InfernoChatAgent();
 
     @Override
     protected void logInfo0(String message) {
@@ -65,7 +68,7 @@ public class InfernoCore extends CommonCore {
 
     @Override
     protected IChatAgent getChatAgent0() {
-        throw new NotImplementedException("TODO");
+        return CHAT_AGENT;
     }
 
     @Override
