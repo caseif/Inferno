@@ -25,8 +25,12 @@
 package net.caseif.flint.inferno.util.factory;
 
 import net.caseif.flint.common.util.factory.IMinigameFactory;
+import net.caseif.flint.inferno.minigame.InfernoMinigame;
 import net.caseif.flint.minigame.Minigame;
-import org.apache.commons.lang3.NotImplementedException;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.plugin.PluginContainer;
+
+import java.util.Optional;
 
 /**
  * The implementation of {@link IMinigameFactory}.
@@ -35,6 +39,12 @@ public class InfernoMinigameFactory implements IMinigameFactory {
 
     @Override
     public Minigame createMinigame(String pluginId) {
-        throw new NotImplementedException("TODO");
+        Optional<PluginContainer> pluginContainer = Sponge.getPluginManager().getPlugin(pluginId);
+
+        if (pluginContainer.isPresent()) {
+            return new InfernoMinigame(pluginContainer.get());
+        } else {
+            throw new UnsupportedOperationException("No plugin exists of id: " + pluginId + "!");
+        }
     }
 }

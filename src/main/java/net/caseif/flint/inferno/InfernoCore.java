@@ -31,8 +31,6 @@ import net.caseif.flint.common.util.agent.chat.IChatAgent;
 import net.caseif.flint.common.util.factory.IFactoryRegistry;
 import net.caseif.flint.inferno.util.agent.InfernoChatAgent;
 import net.caseif.flint.inferno.util.factory.InfernoFactoryRegistry;
-import net.caseif.flint.minigame.Minigame;
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -82,10 +80,5 @@ public class InfernoCore extends CommonCore {
     @Override
     protected String getImplementationName0() {
         return StringUtils.capitalize(InfernoCore.class.getPackage().getImplementationTitle());
-    }
-
-    @Override
-    protected Minigame registerPlugin0(String pluginId) throws IllegalStateException {
-        throw new NotImplementedException("TODO");
     }
 }

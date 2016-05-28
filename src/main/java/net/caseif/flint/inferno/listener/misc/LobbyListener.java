@@ -43,11 +43,12 @@ public final class LobbyListener {
     @Listener
     public void onBlockBreak(ChangeBlockEvent.Break event) {
         for (Transaction<BlockSnapshot> blockSnapshotTransaction : event.getTransactions()) {
-            if (blockSnapshotTransaction.getOriginal().getState().getType() == BlockTypes.STANDING_SIGN ||
-                    blockSnapshotTransaction.getOriginal().getState().getType() == BlockTypes.WALL_SIGN) {
-                if (blockSnapshotTransaction.getOriginal().getLocation().isPresent()) {
-                    Location3D location3D =
-                            LocationConverter.of(blockSnapshotTransaction.getOriginal().getLocation().get());
+            final BlockSnapshot original = blockSnapshotTransaction.getOriginal();
+
+            if (original.getState().getType() == BlockTypes.STANDING_SIGN ||
+                    original.getState().getType() == BlockTypes.WALL_SIGN) {
+                if (original.getLocation().isPresent()) {
+                    final Location3D location3D = LocationConverter.of(original.getLocation().get());
 
                     for (Minigame minigame : InfernoCore.getMinigames().values()) {
                         for (Arena arena : minigame.getArenas()) {
