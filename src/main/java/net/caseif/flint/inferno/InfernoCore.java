@@ -29,7 +29,7 @@ import net.caseif.flint.common.CommonCore;
 import net.caseif.flint.common.component.CommonComponent;
 import net.caseif.flint.common.util.agent.chat.IChatAgent;
 import net.caseif.flint.common.util.factory.IFactoryRegistry;
-import net.caseif.flint.inferno.util.agent.InfernoChatAgent;
+import net.caseif.flint.inferno.util.agent.chat.InfernoChatAgent;
 import net.caseif.flint.inferno.util.factory.InfernoFactoryRegistry;
 
 import org.apache.commons.lang3.NotImplementedException;

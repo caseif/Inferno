@@ -88,8 +88,8 @@ public class InfernoMinigame extends CommonMinigame {
     }
 
     @Override
-    public Arena createArena(String s, String s1, Location3D location3D, Boundary boundary)
+    public Arena createArena(String id, String name, Location3D location, Boundary boundary)
             throws IllegalArgumentException {
-        return null;
+        return InfernoCore.getFactoryRegistry().getArenaFactory().createArena(this, id, name, location, boundary);
     }
 }

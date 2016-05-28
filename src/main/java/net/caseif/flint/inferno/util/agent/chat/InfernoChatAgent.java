@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.caseif.flint.inferno.util.agent;
+package net.caseif.flint.inferno.util.agent.chat;
 
 import net.caseif.flint.common.util.agent.chat.IChatAgent;
 
