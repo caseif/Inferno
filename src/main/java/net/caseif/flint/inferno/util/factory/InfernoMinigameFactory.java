@@ -27,6 +27,7 @@ package net.caseif.flint.inferno.util.factory;
 import net.caseif.flint.common.util.factory.IMinigameFactory;
 import net.caseif.flint.inferno.minigame.InfernoMinigame;
 import net.caseif.flint.minigame.Minigame;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.plugin.PluginContainer;
 

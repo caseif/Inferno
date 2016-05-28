@@ -27,6 +27,7 @@ package net.caseif.flint.inferno.util.factory;
 import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.util.agent.rollback.IRollbackAgent;
 import net.caseif.flint.common.util.factory.IRollbackAgentFactory;
+
 import org.apache.commons.lang3.NotImplementedException;
 
 /**

@@ -24,11 +24,12 @@
 
 package net.caseif.flint.inferno.util.factory;
 
-import com.google.common.collect.ImmutableSet;
 import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.util.factory.IRoundFactory;
 import net.caseif.flint.round.LifecycleStage;
 import net.caseif.flint.round.Round;
+
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.NotImplementedException;
 
 /**

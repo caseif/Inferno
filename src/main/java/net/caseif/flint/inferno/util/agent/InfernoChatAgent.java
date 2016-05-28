@@ -25,9 +25,10 @@
 package net.caseif.flint.inferno.util.agent;
 
 import net.caseif.flint.common.util.agent.chat.IChatAgent;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -38,20 +39,21 @@ import java.util.UUID;
 public class InfernoChatAgent implements IChatAgent {
 
     @Override
-    public void processAndSend(UUID recipient, String message) throws IllegalArgumentException {
-        Optional<Player> player = Sponge.getServer().getPlayer(recipient);
-
-        if (player.isPresent()) {
-            player.get().sendMessage(Text.of(message));
-        } else {
-            throw new IllegalArgumentException("Player with specified UUID not found!");
-        }
-    }
-
-    @Override
     public void processAndSend(UUID recipient, String... message) throws IllegalArgumentException {
         for (String msg : message) {
             this.processAndSend(recipient, msg);
         }
     }
+
+    @SuppressWarnings("deprecation")
+    private void processAndSend(UUID recipient, String message) throws IllegalArgumentException {
+        Optional<Player> player = Sponge.getServer().getPlayer(recipient);
+
+        if (player.isPresent()) {
+            player.get().sendMessage(TextSerializers.LEGACY_FORMATTING_CODE.deserialize(message));
+        } else {
+            throw new IllegalArgumentException("Player with specified UUID not found!");
+        }
+    }
+
 }

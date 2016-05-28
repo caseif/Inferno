@@ -30,6 +30,7 @@ import net.caseif.flint.inferno.InfernoCore;
 import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.util.physical.Boundary;
 import net.caseif.flint.util.physical.Location3D;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -63,8 +64,8 @@ public class InfernoMinigame extends CommonMinigame {
                         (int) Math.floor(loc.getZ())
                 );
 
-                if (blockState.getType() == BlockTypes.STANDING_SIGN ||
-                        blockState.getType() == BlockTypes.WALL_SIGN) {
+                if (blockState.getType() == BlockTypes.STANDING_SIGN
+                        || blockState.getType() == BlockTypes.WALL_SIGN) {
                     return 0;
                 } else {
                     InfernoCore.logWarning("Found lobby sign with location not containing a sign block. Removing...");

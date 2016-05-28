@@ -24,8 +24,9 @@
 
 package net.caseif.flint.inferno;
 
-import com.google.inject.Inject;
 import net.caseif.flint.inferno.listener.misc.LobbyListener;
+
+import com.google.inject.Inject;
 import net.minecrell.mcstats.SpongeStatsLite;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;

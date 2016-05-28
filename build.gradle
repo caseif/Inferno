@@ -50,7 +50,7 @@ ext {
                     + (System.getenv('BUILD_NUMBER') ? '-jnks' + System.getenv('BUILD_NUMBER') : '')
     ) : ''
 
-    commonVersion = '1.2.1-SNAPSHOT'
+    commonVersion = '1.2.1'
 }
 
 dependencies {

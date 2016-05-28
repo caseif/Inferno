@@ -24,11 +24,12 @@
 
 package net.caseif.flint.inferno.util.factory;
 
-import com.google.gson.JsonObject;
 import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.util.factory.ILobbySignFactory;
 import net.caseif.flint.lobby.LobbySign;
 import net.caseif.flint.util.physical.Location3D;
+
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.NotImplementedException;
 
 /**

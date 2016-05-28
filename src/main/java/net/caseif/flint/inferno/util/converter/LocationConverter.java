@@ -25,11 +25,12 @@
 package net.caseif.flint.inferno.util.converter;
 
 import net.caseif.flint.util.physical.Location3D;
+
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 /**
- * A converter for {@link Location<World>} and {@link Location3D}.
+ * A converter for {@link Location Location&lt;World&gt;} and {@link Location3D}.
  */
 public final class LocationConverter {
 

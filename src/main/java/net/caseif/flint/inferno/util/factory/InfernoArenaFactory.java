@@ -29,6 +29,7 @@ import net.caseif.flint.common.minigame.CommonMinigame;
 import net.caseif.flint.common.util.factory.IArenaFactory;
 import net.caseif.flint.util.physical.Boundary;
 import net.caseif.flint.util.physical.Location3D;
+
 import org.apache.commons.lang3.NotImplementedException;
 
 /**

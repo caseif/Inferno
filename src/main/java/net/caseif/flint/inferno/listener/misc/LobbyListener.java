@@ -24,11 +24,11 @@
 
 package net.caseif.flint.inferno.listener.misc;
 
-import net.caseif.flint.arena.Arena;
 import net.caseif.flint.inferno.InfernoCore;
 import net.caseif.flint.inferno.util.converter.LocationConverter;
 import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.util.physical.Location3D;
+
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
@@ -45,17 +45,14 @@ public final class LobbyListener {
         for (Transaction<BlockSnapshot> blockSnapshotTransaction : event.getTransactions()) {
             final BlockSnapshot original = blockSnapshotTransaction.getOriginal();
 
-            if (original.getState().getType() == BlockTypes.STANDING_SIGN ||
-                    original.getState().getType() == BlockTypes.WALL_SIGN) {
+            if (original.getState().getType() == BlockTypes.STANDING_SIGN
+                    || original.getState().getType() == BlockTypes.WALL_SIGN) {
                 if (original.getLocation().isPresent()) {
                     final Location3D location3D = LocationConverter.of(original.getLocation().get());
 
                     for (Minigame minigame : InfernoCore.getMinigames().values()) {
-                        for (Arena arena : minigame.getArenas()) {
-                            if (arena.getLobbySignAt(location3D).isPresent()) {
-                                event.setCancelled(true);
-                            }
-                        }
+                        minigame.getArenas().stream().filter(arena -> arena.getLobbySignAt(location3D).isPresent())
+                                .forEach(arena -> event.setCancelled(true));
                     }
                 }
             }
