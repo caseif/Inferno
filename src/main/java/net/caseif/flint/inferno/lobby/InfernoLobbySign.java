@@ -24,31 +24,55 @@
 
 package net.caseif.flint.inferno.lobby;
 
-import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.lobby.CommonLobbySign;
 import net.caseif.flint.component.exception.OrphanedComponentException;
+import net.caseif.flint.inferno.InfernoPlugin;
+import net.caseif.flint.inferno.arena.InfernoArena;
+import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.util.physical.Location3D;
-
 import org.apache.commons.lang3.NotImplementedException;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class InfernoLobbySign extends CommonLobbySign {
 
-    protected InfernoLobbySign(Location3D location, CommonArena arena, Type type) {
+    private static final int SIGN_SIZE = 4;
+
+    public InfernoLobbySign(Location3D location, InfernoArena arena, Type type) {
         super(location, arena, type);
+
+        Sponge.getScheduler()
+                .createTaskBuilder()
+                .execute(this::update)
+                .submit(InfernoPlugin.getInstance());
     }
 
     @Override
     protected boolean validate() {
-        throw new NotImplementedException("TODO");
+        final Location<World> location = WorldLocationConverter.of(this.getLocation());
+        return location.getExtent().getBlock(location.getBlockPosition()).getType() == BlockTypes.WALL_SIGN
+                || location.getExtent().getBlock(location.getBlockPosition()).getType() == BlockTypes.STANDING_SIGN;
     }
 
     @Override
     protected int getSignSize() {
-        throw new NotImplementedException("TODO");
+        return SIGN_SIZE;
     }
 
     @Override
     public void update() throws OrphanedComponentException {
+        this.checkState();
+
+        switch (this.getType()) {
+            case STATUS:
+                break;
+            case CHALLENGER_LISTING:
+                break;
+            default: // wtf
+                throw new AssertionError();
+        }
         throw new NotImplementedException("TODO");
     }
 
