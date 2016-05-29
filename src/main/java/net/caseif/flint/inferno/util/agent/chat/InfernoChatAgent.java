@@ -38,6 +38,7 @@ import java.util.UUID;
  */
 public class InfernoChatAgent implements IChatAgent {
 
+    @SuppressWarnings("deprecation")
     @Override
     public void processAndSend(UUID recipient, String... message) throws IllegalArgumentException {
         Optional<Player> player = Sponge.getServer().getPlayer(recipient);

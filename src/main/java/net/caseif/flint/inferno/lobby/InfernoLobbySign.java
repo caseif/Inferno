@@ -24,12 +24,13 @@
 
 package net.caseif.flint.inferno.lobby;
 
+import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.lobby.CommonLobbySign;
 import net.caseif.flint.component.exception.OrphanedComponentException;
 import net.caseif.flint.inferno.InfernoPlugin;
-import net.caseif.flint.inferno.arena.InfernoArena;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.util.physical.Location3D;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
@@ -40,7 +41,7 @@ public class InfernoLobbySign extends CommonLobbySign {
 
     private static final int SIGN_SIZE = 4;
 
-    public InfernoLobbySign(Location3D location, InfernoArena arena, Type type) {
+    public InfernoLobbySign(Location3D location, CommonArena arena, Type type) {
         super(location, arena, type);
 
         Sponge.getScheduler()
