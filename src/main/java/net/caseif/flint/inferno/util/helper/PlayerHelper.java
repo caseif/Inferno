@@ -22,41 +22,21 @@
  * THE SOFTWARE.
  */
 
-package net.caseif.flint.inferno.challenger;
+package net.caseif.flint.inferno.util.helper;
 
-import net.caseif.flint.challenger.Challenger;
-import net.caseif.flint.common.challenger.CommonChallenger;
-import net.caseif.flint.component.exception.OrphanedComponentException;
-import net.caseif.flint.inferno.round.InfernoRound;
-
+import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameMode;
-import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 
-/**
- * The implementation of {@link Challenger} for Inferno.
- */
-public class InfernoChallenger extends CommonChallenger {
+import java.io.IOException;
 
-    private final Player player;
-    private GameMode previousGameMode;
+public class PlayerHelper {
 
-    public InfernoChallenger(Player player, InfernoRound round) {
-        super(player.getUniqueId(), player.getName(), round);
-
-        this.player = player;
+    public static void pushInventory(Player player) throws IOException {
+        throw new NotImplementedException("TODO");
     }
 
-    @Override
-    public void setSpectating(boolean spectating) throws OrphanedComponentException {
-        super.setSpectating(spectating);
-
-        if (spectating) {
-            this.previousGameMode = this.player.gameMode().get();
-            this.player.gameMode().set(GameModes.SPECTATOR);
-        } else if (this.previousGameMode != null) {
-            this.player.gameMode().set(this.previousGameMode);
-            this.previousGameMode = null;
-        }
+    public static void popInventory(Player player) throws IOException {
+        throw new NotImplementedException("TODO");
     }
+
 }
