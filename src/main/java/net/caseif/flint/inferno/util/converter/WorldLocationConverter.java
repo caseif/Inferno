@@ -47,6 +47,8 @@ public final class WorldLocationConverter {
         checkArgument(location.getWorld().isPresent(), "Location must have world");
 
         Optional<World> world = Sponge.getServer().getWorld(location.getWorld().get());
+        checkArgument(location.getWorld().isPresent(), "World doesn't exist!");
+
         return world.get().getLocation(location.getX(), location.getY(), location.getZ());
     }
 

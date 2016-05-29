@@ -27,6 +27,7 @@ package net.caseif.flint.inferno.minigame;
 import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.minigame.CommonMinigame;
 import net.caseif.flint.inferno.InfernoCore;
+import net.caseif.flint.inferno.util.converter.LocationConverter;
 import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.util.physical.Boundary;
 import net.caseif.flint.util.physical.Location3D;
@@ -58,11 +59,7 @@ public class InfernoMinigame extends CommonMinigame {
             Optional<World> world = Sponge.getGame().getServer().getWorld(loc.getWorld().get());
 
             if (world.isPresent()) {
-                BlockState blockState = world.get().getBlock(
-                        (int) Math.floor(loc.getX()),
-                        (int) Math.floor(loc.getY()),
-                        (int) Math.floor(loc.getZ())
-                );
+                BlockState blockState = world.get().getBlock(LocationConverter.floor(loc));
 
                 if (blockState.getType() == BlockTypes.STANDING_SIGN
                         || blockState.getType() == BlockTypes.WALL_SIGN) {

@@ -32,7 +32,7 @@ import com.flowpowered.math.vector.Vector3i;
 /**
  * A converter for {@link Vector3d} and {@link Location3D}.
  */
-public class LocationConverter {
+public final class LocationConverter {
 
     public static Vector3d of(Location3D location) {
         return new Vector3d(location.getX(), location.getY(), location.getZ());

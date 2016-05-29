@@ -40,17 +40,12 @@ public class InfernoChatAgent implements IChatAgent {
 
     @Override
     public void processAndSend(UUID recipient, String... message) throws IllegalArgumentException {
-        for (String msg : message) {
-            this.processAndSend(recipient, msg);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private void processAndSend(UUID recipient, String message) throws IllegalArgumentException {
         Optional<Player> player = Sponge.getServer().getPlayer(recipient);
 
         if (player.isPresent()) {
-            player.get().sendMessage(TextSerializers.LEGACY_FORMATTING_CODE.deserialize(message));
+            for (String msg : message) {
+                player.get().sendMessage(TextSerializers.LEGACY_FORMATTING_CODE.deserialize(msg));
+            }
         } else {
             throw new IllegalArgumentException("Player with specified UUID not found!");
         }
