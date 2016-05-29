@@ -26,15 +26,25 @@ package net.caseif.flint.inferno.util.converter;
 
 import net.caseif.flint.util.physical.Location3D;
 
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3i;
 
 /**
- * A converter for {@link Location Location&lt;World&gt;} and {@link Location3D}.
+ * A converter for {@link Vector3d} and {@link Location3D}.
  */
-public final class LocationConverter {
+public class LocationConverter {
 
-    public static Location3D of(Location<World> location) {
-        return new Location3D(location.getExtent().getName(), location.getX(), location.getY(), location.getZ());
+    public static Vector3d of(Location3D location) {
+        return new Vector3d(location.getX(), location.getY(), location.getZ());
     }
+
+    public static Location3D of(Vector3d vector) {
+        return new Location3D(vector.getX(), vector.getY(), vector.getZ());
+    }
+
+    public static Vector3i floor(Location3D location) {
+        // coordinates are automatically floored in ctor
+        return new Vector3i(location.getX(), location.getY(), location.getZ());
+    }
+
 }

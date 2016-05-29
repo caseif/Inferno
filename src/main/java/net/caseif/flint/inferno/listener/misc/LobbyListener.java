@@ -25,7 +25,7 @@
 package net.caseif.flint.inferno.listener.misc;
 
 import net.caseif.flint.inferno.InfernoCore;
-import net.caseif.flint.inferno.util.converter.LocationConverter;
+import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.util.physical.Location3D;
 
@@ -48,7 +48,7 @@ public final class LobbyListener {
             if (original.getState().getType() == BlockTypes.STANDING_SIGN
                     || original.getState().getType() == BlockTypes.WALL_SIGN) {
                 if (original.getLocation().isPresent()) {
-                    final Location3D location3D = LocationConverter.of(original.getLocation().get());
+                    final Location3D location3D = WorldLocationConverter.of(original.getLocation().get());
 
                     for (Minigame minigame : InfernoCore.getMinigames().values()) {
                         minigame.getArenas().stream().filter(arena -> arena.getLobbySignAt(location3D).isPresent())
