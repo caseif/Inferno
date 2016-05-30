@@ -88,7 +88,7 @@ jar {
 jar.manifest.mainAttributes(
         'Created-By': System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
         'Specification-Title': 'Flint',
-        'Specification-Version': commonVersion,
+        'Specification-Version': '1.2',
         'Specification-Vendor': 'Max Roncace',
         'Implementation-Title': name,
         'Implementation-Version': version + versionSuffix
