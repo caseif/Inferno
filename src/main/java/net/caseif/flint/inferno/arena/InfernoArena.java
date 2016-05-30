@@ -33,6 +33,7 @@ import net.caseif.flint.component.exception.OrphanedComponentException;
 import net.caseif.flint.exception.rollback.RollbackException;
 import net.caseif.flint.inferno.lobby.type.InfernoChallengerListingLobbySign;
 import net.caseif.flint.inferno.lobby.type.InfernoStatusLobbySign;
+import net.caseif.flint.inferno.util.agent.rollback.InfernoRollbackAgent;
 import net.caseif.flint.inferno.util.converter.LocationConverter;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.lobby.LobbySign;
@@ -42,13 +43,15 @@ import net.caseif.flint.util.physical.Boundary;
 import net.caseif.flint.util.physical.Location3D;
 
 import com.google.common.base.Optional;
-import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class InfernoArena extends CommonArena {
 
@@ -84,7 +87,15 @@ public class InfernoArena extends CommonArena {
             throws IllegalArgumentException, RollbackException, OrphanedComponentException {
         checkState();
 
-        throw new NotImplementedException("TODO");
+        checkArgument(location.getWorld().equals(getWorld()),
+                "Cannot roll back block change in separate world from arena");
+
+        try {
+            ((InfernoRollbackAgent) getRollbackAgent())
+                    .logBlockChange(WorldLocationConverter.of(location).createSnapshot());
+        } catch (IOException | SQLException ex) {
+            throw new RollbackException(ex);
+        }
     }
 
     private boolean checkLocationForLobbySign(Location3D location) throws IllegalArgumentException {
