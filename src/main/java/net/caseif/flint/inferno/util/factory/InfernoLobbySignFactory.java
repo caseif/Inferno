@@ -24,13 +24,20 @@
 
 package net.caseif.flint.inferno.util.factory;
 
+import static net.caseif.flint.common.lobby.CommonLobbySign.PERSIST_INDEX_KEY;
+import static net.caseif.flint.common.lobby.CommonLobbySign.PERSIST_TYPE_KEY;
+import static net.caseif.flint.common.lobby.CommonLobbySign.PERSIST_TYPE_LISTING;
+import static net.caseif.flint.common.lobby.CommonLobbySign.PERSIST_TYPE_STATUS;
+
 import net.caseif.flint.arena.Arena;
+import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.util.factory.ILobbySignFactory;
+import net.caseif.flint.inferno.lobby.type.InfernoChallengerListingLobbySign;
+import net.caseif.flint.inferno.lobby.type.InfernoStatusLobbySign;
 import net.caseif.flint.lobby.LobbySign;
 import net.caseif.flint.util.physical.Location3D;
 
 import com.google.gson.JsonObject;
-import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * The implementation of {@link ILobbySignFactory}.
@@ -40,6 +47,23 @@ public class InfernoLobbySignFactory implements ILobbySignFactory {
     @Override
     public LobbySign createLobbySign(Location3D location, Arena arena, JsonObject json)
             throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+        if (json.has(PERSIST_TYPE_KEY)) {
+            String type = json.get(PERSIST_TYPE_KEY).getAsString();
+            switch (type) {
+                case PERSIST_TYPE_STATUS: {
+                    return new InfernoStatusLobbySign(location, (CommonArena) arena);
+                }
+                case PERSIST_TYPE_LISTING: {
+                    if (!json.has(PERSIST_INDEX_KEY)) {
+                        break;
+                    }
+                    int index = json.get(PERSIST_INDEX_KEY).getAsInt();
+                    return new InfernoChallengerListingLobbySign(location, (CommonArena) arena, index);
+                }
+                default: { // continue to IllegalArgumentException
+                }
+            }
+        }
+        throw new IllegalArgumentException("Invalid configuration for LobbySign");
     }
 }

@@ -25,10 +25,10 @@
 package net.caseif.flint.inferno.util.factory;
 
 import net.caseif.flint.arena.Arena;
+import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.util.agent.rollback.IRollbackAgent;
 import net.caseif.flint.common.util.factory.IRollbackAgentFactory;
-
-import org.apache.commons.lang3.NotImplementedException;
+import net.caseif.flint.inferno.util.agent.rollback.InfernoRollbackAgent;
 
 /**
  * The implementation of {@link IRollbackAgentFactory}.
@@ -37,6 +37,6 @@ public class InfernoRollbackAgentFactory implements IRollbackAgentFactory {
 
     @Override
     public IRollbackAgent createRollbackAgent(Arena arena) {
-        throw new NotImplementedException("TODO");
+        return new InfernoRollbackAgent((CommonArena) arena);
     }
 }

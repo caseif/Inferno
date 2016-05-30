@@ -25,12 +25,13 @@
 package net.caseif.flint.inferno.util.factory;
 
 import net.caseif.flint.arena.Arena;
+import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.util.factory.IRoundFactory;
+import net.caseif.flint.inferno.round.InfernoRound;
 import net.caseif.flint.round.LifecycleStage;
 import net.caseif.flint.round.Round;
 
 import com.google.common.collect.ImmutableSet;
-import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * The implementation of {@link IRoundFactory}.
@@ -39,6 +40,6 @@ public class InfernoRoundFactory implements IRoundFactory {
 
     @Override
     public Round createRound(Arena arena, ImmutableSet<LifecycleStage> stages) {
-        throw new NotImplementedException("TODO");
+        return new InfernoRound((CommonArena) arena, stages);
     }
 }

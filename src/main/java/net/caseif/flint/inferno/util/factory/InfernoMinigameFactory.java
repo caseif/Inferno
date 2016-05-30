@@ -45,7 +45,7 @@ public class InfernoMinigameFactory implements IMinigameFactory {
         if (pluginContainer.isPresent()) {
             return new InfernoMinigame(pluginContainer.get());
         } else {
-            throw new UnsupportedOperationException("No plugin exists of id: " + pluginId + "!");
+            throw new IllegalArgumentException("Plugin with ID " + pluginId + " is not enabled");
         }
     }
 }

@@ -27,10 +27,9 @@ package net.caseif.flint.inferno.util.factory;
 import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.minigame.CommonMinigame;
 import net.caseif.flint.common.util.factory.IArenaFactory;
+import net.caseif.flint.inferno.arena.InfernoArena;
 import net.caseif.flint.util.physical.Boundary;
 import net.caseif.flint.util.physical.Location3D;
-
-import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * The implementation of {@link IArenaFactory}.
@@ -40,6 +39,6 @@ public class InfernoArenaFactory implements IArenaFactory {
     @Override
     public CommonArena createArena(CommonMinigame parent, String id, String name, Location3D initialSpawn,
             Boundary boundary) {
-        throw new NotImplementedException("TODO");
+        return new InfernoArena(parent, id, name, initialSpawn, boundary);
     }
 }
