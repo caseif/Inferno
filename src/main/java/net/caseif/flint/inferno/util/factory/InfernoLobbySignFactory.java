@@ -1,7 +1,8 @@
 /*
  * This file is part of Inferno, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Max Roncace and contributors <me@caseif.net>
+ * Copyright (c) 2016, Max Roncace <me@caseif.net>
+ * Copyright (c) 2016, contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
