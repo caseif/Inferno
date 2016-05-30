@@ -24,6 +24,7 @@
 
 package net.caseif.flint.inferno.round;
 
+import static com.flowpowered.math.GenericMath.clamp;
 import static com.google.common.base.Preconditions.checkState;
 
 import net.caseif.flint.challenger.Challenger;
@@ -37,9 +38,9 @@ import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.Optional;
 
-public class RoundWorker extends CommonRoundWorker {
+public class InfernoRoundWorker extends CommonRoundWorker {
 
-    public RoundWorker(InfernoRound round) {
+    public InfernoRoundWorker(InfernoRound round) {
         super(round);
     }
 
@@ -55,15 +56,9 @@ public class RoundWorker extends CommonRoundWorker {
                 if (this.getRound().getConfigValue(ConfigNode.ALLOW_EXIT_BOUNDARY)) {
                     challenger.removeFromRound();
                 } else {
-                    double x = loc.getX() > bound.getUpperBound().getX() ? bound.getUpperBound().getX()
-                            : loc.getX() < bound.getLowerBound().getX() ? bound.getLowerBound().getX()
-                                    : loc.getX();
-                    double y = loc.getY() > bound.getUpperBound().getY() ? bound.getUpperBound().getY()
-                            : loc.getY() < bound.getLowerBound().getY() ? bound.getLowerBound().getY()
-                                    : loc.getY();
-                    double z = loc.getZ() > bound.getUpperBound().getZ() ? bound.getUpperBound().getZ()
-                            : loc.getZ() < bound.getLowerBound().getZ() ? bound.getLowerBound().getZ()
-                                    : loc.getZ();
+                    double x = clamp(loc.getX(), bound.getLowerBound().getX(), bound.getUpperBound().getX());
+                    double y = clamp(loc.getY(), bound.getLowerBound().getY(), bound.getUpperBound().getY());
+                    double z = clamp(loc.getZ(), bound.getLowerBound().getZ(), bound.getUpperBound().getZ());
                     player.get().setLocation(player.get().getWorld().getLocation(x, y, z));
                 }
             }
