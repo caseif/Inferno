@@ -34,7 +34,7 @@ import java.util.UUID;
 
 public class InfernoWizardManager extends CommonWizardManager {
 
-    protected InfernoWizardManager(Minigame minigame) {
+    public InfernoWizardManager(Minigame minigame) {
         super(minigame);
     }
 

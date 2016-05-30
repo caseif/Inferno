@@ -25,8 +25,10 @@
 package net.caseif.flint.inferno.minigame;
 
 import net.caseif.flint.arena.Arena;
+import net.caseif.flint.common.lobby.wizard.IWizardManager;
 import net.caseif.flint.common.minigame.CommonMinigame;
 import net.caseif.flint.inferno.InfernoCore;
+import net.caseif.flint.inferno.lobby.wizard.InfernoWizardManager;
 import net.caseif.flint.inferno.util.converter.LocationConverter;
 import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.util.physical.Boundary;
@@ -47,10 +49,13 @@ public class InfernoMinigame extends CommonMinigame {
 
     private final PluginContainer pluginContainer;
 
+    private final IWizardManager wizardManager;
+
     public InfernoMinigame(PluginContainer pluginContainer) {
         super();
 
         this.pluginContainer = pluginContainer;
+        wizardManager = new InfernoWizardManager(this);
     }
 
     @Override
@@ -89,4 +94,9 @@ public class InfernoMinigame extends CommonMinigame {
             throws IllegalArgumentException {
         return InfernoCore.getFactoryRegistry().getArenaFactory().createArena(this, id, name, location, boundary);
     }
+
+    public IWizardManager getLobbyWizardManager() {
+        return wizardManager;
+    }
+
 }
