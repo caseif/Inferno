@@ -54,7 +54,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * The event listener for the lobby.
+ * The event listener for the lobby system.
  */
 public final class LobbyListener {
 

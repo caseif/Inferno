@@ -40,4 +40,12 @@ public class PlayerHelper {
         throw new NotImplementedException("TODO");
     }
 
+    public static void pushLocation(Player player) throws IOException {
+        throw new NotImplementedException("TODO");
+    }
+
+    public static void popLocation(Player player) throws IOException {
+        throw new NotImplementedException("TODO");
+    }
+
 }
