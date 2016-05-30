@@ -126,8 +126,4 @@ public class InfernoRound extends CommonRound {
         }
     }
 
-    boolean isOrphaned() {
-        return orphan;
-    }
-
 }

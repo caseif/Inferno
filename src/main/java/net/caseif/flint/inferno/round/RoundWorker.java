@@ -24,71 +24,35 @@
 
 package net.caseif.flint.inferno.round;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import net.caseif.flint.challenger.Challenger;
-import net.caseif.flint.common.event.round.CommonRoundTimerTickEvent;
+import net.caseif.flint.common.round.CommonRoundWorker;
 import net.caseif.flint.config.ConfigNode;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
-import net.caseif.flint.lobby.LobbySign;
 import net.caseif.flint.util.physical.Boundary;
 import net.caseif.flint.util.physical.Location3D;
-
-import com.google.common.base.Preconditions;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.Optional;
 
-public class RoundWorker implements Runnable {
-
-    private final InfernoRound round;
+public class RoundWorker extends CommonRoundWorker {
 
     public RoundWorker(InfernoRound round) {
-        this.round = round;
+        super(round);
     }
 
-    @Override
-    public void run() {
-        if (round.isTimerTicking()) {
-            handleTick();
-        }
-        if (!round.isOrphaned()) {
-            checkPlayerLocations();
-
-            for (LobbySign sign : round.getArena().getLobbySigns()) {
-                if (sign.getType() == LobbySign.Type.STATUS) {
-                    sign.update();
-                }
-            }
-        }
-    }
-
-    private void handleTick() {
-        boolean stageSwitch = round.getLifecycleStage().getDuration() > 0
-                && round.getTime() >= round.getLifecycleStage().getDuration();
-        if (stageSwitch) {
-            if (round.getNextLifecycleStage().isPresent()) {
-                round.nextLifecycleStage();
-            } else {
-                round.end(round.getConfigValue(ConfigNode.ROLLBACK_ON_END), true);
-                return;
-            }
-        } else {
-            round.setTime(round.getTime() + 1, false);
-        }
-        round.getArena().getMinigame().getEventBus().post(new CommonRoundTimerTickEvent(round, round.getTime() - 1,
-                stageSwitch ? 0 : round.getTime()));
-    }
-
-    private void checkPlayerLocations() {
-        Boundary bound = round.getArena().getBoundary();
-        for (Challenger challenger : round.getChallengers()) {
+    protected void checkPlayerLocations() {
+        Boundary bound = this.getRound().getArena().getBoundary();
+        for (Challenger challenger : this.getRound().getChallengers()) {
             Optional<Player> player = Sponge.getServer().getPlayer(challenger.getUniqueId());
 
-            Preconditions.checkState(player.isPresent(), "Challenger's player is not present");
+            checkState(player.isPresent(), "Challenger's player is not present");
 
             Location3D loc = WorldLocationConverter.of(player.get().getLocation());
             if (!bound.contains(loc)) {
-                if (round.getConfigValue(ConfigNode.ALLOW_EXIT_BOUNDARY)) {
+                if (this.getRound().getConfigValue(ConfigNode.ALLOW_EXIT_BOUNDARY)) {
                     challenger.removeFromRound();
                 } else {
                     double x = loc.getX() > bound.getUpperBound().getX() ? bound.getUpperBound().getX()
