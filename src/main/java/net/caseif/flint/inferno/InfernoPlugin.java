@@ -27,6 +27,7 @@ package net.caseif.flint.inferno;
 
 import net.caseif.flint.inferno.listener.misc.LobbyListener;
 import net.caseif.flint.inferno.listener.player.PlayerConnectionListener;
+import net.caseif.flint.round.Round;
 
 import com.google.inject.Inject;
 import net.minecrell.mcstats.SpongeStatsLite;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 /**
@@ -60,6 +62,10 @@ public final class InfernoPlugin {
         // Register event listeners
         Sponge.getEventManager().registerListeners(this, new LobbyListener());
         Sponge.getEventManager().registerListeners(this, new PlayerConnectionListener());
+    }
+
+    public void onGameStopping(GameStoppingEvent event) {
+        InfernoCore.getMinigames().values().forEach(mg -> mg.getRounds().forEach(Round::end));
     }
 
     /**
