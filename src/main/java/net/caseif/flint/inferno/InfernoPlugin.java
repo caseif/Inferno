@@ -64,6 +64,7 @@ public final class InfernoPlugin {
         Sponge.getEventManager().registerListeners(this, new PlayerConnectionListener());
     }
 
+    @Listener
     public void onGameStopping(GameStoppingEvent event) {
         InfernoCore.getMinigames().values().forEach(mg -> mg.getRounds().forEach(Round::end));
     }
