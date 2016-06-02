@@ -27,9 +27,11 @@ package net.caseif.flint.inferno.util.agent.rollback;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.util.agent.rollback.CommonRollbackAgent;
 import net.caseif.flint.inferno.InfernoCore;
+import net.caseif.flint.inferno.arena.InfernoArena;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.util.physical.Location3D;
 
@@ -39,9 +41,11 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.DataManager;
 import org.spongepowered.api.data.DataSerializable;
+import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.translator.ConfigurateTranslator;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntitySnapshot;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.io.BufferedReader;
@@ -50,6 +54,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,9 +77,8 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
                 es.getType().getId(), 0, serialize(es));
     }
 
-    public void logEntityCreation(Entity entity) throws IOException, SQLException {
-        super.logChange(RECORD_TYPE_ENTITY_CREATED, WorldLocationConverter.of(entity.getLocation()),
-                entity.getUniqueId(), entity.getType().getId(), 0, null);
+    private void logEntityCreation(UUID uuid) throws IOException, SQLException {
+        super.logChange(RECORD_TYPE_ENTITY_CREATED, new Location3D(getArena().getWorld(), 0, 0, 0), uuid, "", 0, null);
     }
 
     @Override
@@ -103,6 +107,55 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
     @Override
     public void cacheEntities() {
         throw new UnsupportedOperationException(); // not actually necessary on Sponge
+    }
+
+    public static void checkBlockChange(Transaction<BlockSnapshot> transaction) {
+        checkBlockChange(transaction.getOriginal());
+    }
+
+    public static void checkBlockChange(BlockSnapshot block) {
+        Optional<Location<World>> loc = block.getLocation();
+        if (!loc.isPresent()) {
+            return;
+        }
+
+        List<Arena> arenas = checkChangeAtLocation(WorldLocationConverter.of(loc.get()));
+        for (Arena arena : arenas) {
+            try {
+                ((InfernoRollbackAgent) ((InfernoArena) arena).getRollbackAgent()).logBlockChange(block);
+            } catch (IOException | SQLException ex) {
+                throw new RuntimeException("Failed to log block mutation event for rollback in arena "
+                        + arena.getDisplayName(), ex);
+            }
+        }
+    }
+
+    public static void checkEntityChange(EntitySnapshot entity) {
+        checkEntityChange(entity, false);
+    }
+
+    public static void checkEntityChange(EntitySnapshot entity, boolean newlyCreated) {
+        Optional<Location<World>> loc = entity.getLocation();
+        Optional<UUID> uuid = entity.getUniqueId();
+        if (!loc.isPresent() || !uuid.isPresent()) {
+            return;
+        }
+
+        List<Arena> arenas = checkChangeAtLocation(WorldLocationConverter.of(loc.get()));
+        for (Arena arena : arenas) {
+            try {
+                if (newlyCreated) {
+                    ((InfernoRollbackAgent) ((InfernoArena) arena).getRollbackAgent())
+                            .logEntityCreation(entity.getUniqueId().get());
+                } else {
+                    ((InfernoRollbackAgent) ((InfernoArena) arena).getRollbackAgent())
+                            .logEntityChange(entity);
+                }
+            } catch (IOException | SQLException ex) {
+                throw new RuntimeException("Failed to log entity mutation event for rollback in arena "
+                        + arena.getDisplayName(), ex);
+            }
+        }
     }
 
     private String serialize(DataSerializable serializable) throws IOException {

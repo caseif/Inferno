@@ -208,7 +208,7 @@ public class PlayerWorldListener {
     }
 
     @Listener(order = Order.LAST)
-    public void onPlaceBlock(ChangeBlockEvent event) {
+    public void onChangeBlock(ChangeBlockEvent event) {
         java.util.Optional<Player> player = event.getCause().first(Player.class);
         if (player.isPresent()) {
             doSpectatorCheck(event, player.get().getUniqueId());

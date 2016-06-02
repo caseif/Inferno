@@ -28,6 +28,8 @@ package net.caseif.flint.inferno;
 import net.caseif.flint.inferno.listener.misc.LobbyListener;
 import net.caseif.flint.inferno.listener.player.PlayerConnectionListener;
 import net.caseif.flint.inferno.listener.player.PlayerWorldListener;
+import net.caseif.flint.inferno.listener.rollback.RollbackBlockListener;
+import net.caseif.flint.inferno.listener.rollback.RollbackEntityListener;
 import net.caseif.flint.round.Round;
 
 import com.google.inject.Inject;
@@ -59,11 +61,6 @@ public final class InfernoPlugin {
     @Listener
     public void onPreInitialize(GamePreInitializationEvent event) {
         this.stats.start();
-
-        // Register event listeners
-        Sponge.getEventManager().registerListeners(this, new LobbyListener());
-        Sponge.getEventManager().registerListeners(this, new PlayerConnectionListener());
-        Sponge.getEventManager().registerListeners(this, new PlayerWorldListener());
     }
 
     @Listener
@@ -76,12 +73,23 @@ public final class InfernoPlugin {
      *
      * @return The logger
      */
-    public Logger getLogger() {
+    Logger getLogger() {
         return this.logger;
     }
 
     public static InfernoPlugin getInstance() {
         return InfernoPlugin.instance;
+    }
+
+    private void registerEventListeners() {
+        // Register event listeners
+        Sponge.getEventManager().registerListeners(this, new LobbyListener());
+
+        Sponge.getEventManager().registerListeners(this, new PlayerConnectionListener());
+        Sponge.getEventManager().registerListeners(this, new PlayerWorldListener());
+
+        Sponge.getEventManager().registerListeners(this, new RollbackBlockListener());
+        Sponge.getEventManager().registerListeners(this, new RollbackEntityListener());
     }
 
 }
