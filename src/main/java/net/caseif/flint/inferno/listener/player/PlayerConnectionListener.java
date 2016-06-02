@@ -48,7 +48,7 @@ import java.io.IOException;
  */
 public final class PlayerConnectionListener {
 
-    @Listener(order = Order.LAST)
+    @Listener(order = Order.POST)
     public void onPlayerQuit(ClientConnectionEvent.Disconnect event) {
         Optional<Challenger> ch = CommonCore.getChallenger(event.getTargetEntity().getUniqueId());
         if (ch.isPresent()) {
@@ -66,7 +66,7 @@ public final class PlayerConnectionListener {
         }
     }
 
-    @Listener
+    @Listener(order = Order.POST)
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
         tryReset(event.getTargetEntity());
     }

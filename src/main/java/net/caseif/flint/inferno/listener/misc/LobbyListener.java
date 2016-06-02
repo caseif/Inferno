@@ -43,6 +43,7 @@ import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
@@ -58,7 +59,7 @@ import java.util.Optional;
  */
 public final class LobbyListener {
 
-    @Listener
+    @Listener(order = Order.LAST)
     public void onBlockBreak(ChangeBlockEvent.Break event) {
         for (Transaction<BlockSnapshot> blockSnapshotTransaction : event.getTransactions()) {
             final BlockSnapshot original = blockSnapshotTransaction.getOriginal();
@@ -82,7 +83,7 @@ public final class LobbyListener {
         }
     }
 
-    @Listener
+    @Listener(order = Order.POST)
     public void onPlayerInteract(InteractBlockEvent event) {
         BlockState state = event.getTargetBlock().getState();
         if (state.getType() == BlockTypes.WALL_SIGN || state.getType() == BlockTypes.STANDING_SIGN) {
@@ -101,6 +102,8 @@ public final class LobbyListener {
                             if (player.get().hasPermission(mg.getPlugin() + ".lobby.destroy")
                                     || player.get().hasPermission(mg.getPlugin() + ".lobby.*")) {
                                 arena.getLobbySignAt(loc).get().unregister();
+                                player.get().sendMessage(Text.builder("Unregistered lobby sign")
+                                        .color(TextColors.DARK_AQUA).build());
                                 return;
                             }
                         }
@@ -116,7 +119,7 @@ public final class LobbyListener {
         }
     }
 
-    @Listener
+    @Listener(order = Order.POST)
     public void onSignChange(ChangeSignEvent event) {
         for (Map.Entry<String, Minigame> entry : CommonCore.getMinigames().entrySet()) {
             if (event.getText().get(0).get().toPlain().equalsIgnoreCase("[" + entry.getKey() + "]")) {
