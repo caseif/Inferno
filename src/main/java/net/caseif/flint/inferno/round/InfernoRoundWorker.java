@@ -34,6 +34,7 @@ import net.caseif.flint.config.ConfigNode;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.util.physical.Boundary;
 import net.caseif.flint.util.physical.Location3D;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
