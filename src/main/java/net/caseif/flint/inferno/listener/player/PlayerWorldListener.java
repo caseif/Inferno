@@ -39,8 +39,10 @@ import com.google.common.base.Optional;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
@@ -202,6 +204,21 @@ public class PlayerWorldListener {
                             .color(TextColors.RED).build());
                 }
             }
+        }
+    }
+
+    @Listener(order = Order.LAST)
+    public void onPlaceBlock(ChangeBlockEvent event) {
+        java.util.Optional<Player> player = event.getCause().first(Player.class);
+        if (player.isPresent()) {
+            doSpectatorCheck(event, player.get().getUniqueId());
+        }
+    }
+
+    private void doSpectatorCheck(Cancellable event, UUID player) {
+        Optional<Challenger> ch = CommonCore.getChallenger(player);
+        if (ch.isPresent() && ch.get().isSpectating()) {
+            event.setCancelled(true);
         }
     }
 
