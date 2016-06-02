@@ -6,7 +6,7 @@ plugins {
     id 'checkstyle'
 
     id 'org.spongepowered.plugin' version '0.5.2'
-    id 'net.minecrell.licenser' version '0.2'
+    id 'net.minecrell.licenser' version '0.2.1'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 defaultTasks 'clean', 'updateLicenses', 'build'
