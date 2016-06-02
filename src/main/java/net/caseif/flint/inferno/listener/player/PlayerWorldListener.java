@@ -36,16 +36,21 @@ import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.util.physical.Boundary;
 
 import com.google.common.base.Optional;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.command.SendCommandEvent;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageReceiver;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * Listener for events relating to players in the world.
@@ -125,6 +130,76 @@ public class PlayerWorldListener {
                 // check if a chat barrier exists between the sender and recipient
                 if (ChatHelper.isBarrierPresent(player.get().getUniqueId(), ((Player) recip).getUniqueId())) {
                     it.remove();
+                }
+            }
+        }
+    }
+
+    @Listener(order = Order.LAST)
+    public void onDamageEntity(DamageEntityEvent event) {
+        java.util.Optional<Player> damager = event.getCause().first(Player.class);
+        if (!damager.isPresent()) {
+            return; // not a player, so return
+        }
+
+        Optional<Challenger> chal = CommonCore.getChallenger(event.getTargetEntity().getUniqueId());
+        Optional<Challenger> damChal = CommonCore.getChallenger(damager.get().getUniqueId());
+
+        // cancel if either of the players is spectating
+        if (chal.isPresent() && chal.get().isSpectating() || (damChal.isPresent() && damChal.get().isSpectating())) {
+            event.setCancelled(true);
+            return;
+        }
+
+        // check whether both are in a round
+        if (chal.isPresent() && damChal.isPresent()) {
+            // check whether they're in the same round
+            if (chal.get().getRound() == damChal.get().getRound()) {
+                // check whether damage is disabled entirely in the round, or if they're on the same team
+                if (!chal.get().getRound().getConfigValue(ConfigNode.ALLOW_DAMAGE)
+                        || (!chal.get().getRound().getConfigValue(ConfigNode.ALLOW_FRIENDLY_FIRE)
+                        && chal.get().getTeam().orNull() == damChal.get().getTeam().orNull())) {
+                    event.setCancelled(true);
+                }
+            } else {
+                event.setCancelled(true);
+            }
+        } else if (chal.isPresent() != damChal.isPresent()) {
+            event.setCancelled(true); // one's in a round and one's not
+        }
+    }
+
+    @Listener(order = Order.DEFAULT)
+    public void onSendCommand(SendCommandEvent event) {
+        java.util.Optional<Player> sender = event.getCause().first(Player.class);
+
+        if (event.getCommand().equalsIgnoreCase("suicide") || event.getCommand().equalsIgnoreCase("kill")) {
+            java.util.Optional<Player> pl = event.getCommand().equalsIgnoreCase("kill")
+                    ? Sponge.getServer().getPlayer(event.getArguments().split(" ")[0])
+                    : sender;
+            if (!pl.isPresent()) {
+                return;
+            }
+
+            UUID uuid = pl.get().getUniqueId();
+            if (CommonCore.getChallenger(uuid).isPresent()) {
+                event.setCancelled(true);
+
+                if (sender.isPresent()) {
+                    sender.get().sendMessage(Text.builder("You may not run this command while in a minigame round")
+                            .color(TextColors.RED).build());
+                    return;
+                }
+            }
+        }
+
+        if (sender.isPresent()) {
+            Optional<Challenger> ch = CommonCore.getChallenger(sender.get().getUniqueId());
+            if (ch.isPresent()) {
+                if (ch.get().getRound().getConfigValue(ConfigNode.FORBIDDEN_COMMANDS).contains(event.getCommand())) {
+                    event.setCancelled(true);
+                    sender.get().sendMessage(Text.builder("You may not run this command while in a minigame round")
+                            .color(TextColors.RED).build());
                 }
             }
         }
