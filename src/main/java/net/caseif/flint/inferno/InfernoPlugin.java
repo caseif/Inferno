@@ -27,6 +27,7 @@ package net.caseif.flint.inferno;
 
 import net.caseif.flint.inferno.listener.misc.LobbyListener;
 import net.caseif.flint.inferno.listener.player.PlayerConnectionListener;
+import net.caseif.flint.inferno.listener.player.PlayerWorldListener;
 import net.caseif.flint.round.Round;
 
 import com.google.inject.Inject;
@@ -62,6 +63,7 @@ public final class InfernoPlugin {
         // Register event listeners
         Sponge.getEventManager().registerListeners(this, new LobbyListener());
         Sponge.getEventManager().registerListeners(this, new PlayerConnectionListener());
+        Sponge.getEventManager().registerListeners(this, new PlayerWorldListener());
     }
 
     @Listener
