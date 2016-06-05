@@ -30,6 +30,7 @@ import net.caseif.flint.common.CommonCore;
 import net.caseif.flint.common.component.CommonComponent;
 import net.caseif.flint.common.util.agent.chat.IChatAgent;
 import net.caseif.flint.common.util.factory.IFactoryRegistry;
+import net.caseif.flint.inferno.util.InfernoUtils;
 import net.caseif.flint.inferno.util.agent.chat.InfernoChatAgent;
 import net.caseif.flint.inferno.util.factory.InfernoFactoryRegistry;
 
@@ -43,6 +44,11 @@ public class InfernoCore extends CommonCore {
 
     private static final InfernoChatAgent CHAT_AGENT = new InfernoChatAgent();
     private static final InfernoFactoryRegistry FACTORY_REGISTRY = new InfernoFactoryRegistry();
+
+    static void initialize() {
+        INSTANCE = new InfernoCore();
+        PLATFORM_UTILS = new InfernoUtils();
+    }
 
     @Override
     protected void logInfo0(String message) {
