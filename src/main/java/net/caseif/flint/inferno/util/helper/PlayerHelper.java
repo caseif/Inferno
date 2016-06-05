@@ -31,14 +31,13 @@ import net.caseif.flint.inferno.InfernoCore;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
+import org.spongepowered.api.item.inventory.type.OrderedInventory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -54,21 +53,7 @@ public class PlayerHelper {
         File dir = CommonDataFiles.PLAYER_INVENTORY_DIR.getFile();
         File store = new File(dir, player.getUniqueId().toString() + ".json");
 
-        JsonArray json = new JsonArray();
-        player.getInventory().slots().forEach(slot -> {
-            Optional<ItemStack> item = slot.peek();
-            if (item.isPresent()) {
-                try {
-                    json.add(new JsonPrimitive(SerializationHelper.serialize(item.get())));
-                } catch (IOException ex) {
-                    InfernoCore.logWarning("Failed to serialize ItemStack from inventory of player "
-                            + player.getName());
-                    ex.printStackTrace();
-                }
-            } else {
-                json.add(JsonNull.INSTANCE);
-            }
-        });
+        JsonArray json = serializeInventory(player.getInventory());
 
         if (!store.exists()) {
             Files.createFile(store.toPath());
@@ -124,6 +109,26 @@ public class PlayerHelper {
         }
 
         Files.delete(store.toPath());
+    }
+
+    private static JsonArray serializeInventory(Inventory inv) {
+        JsonArray json = new JsonArray();
+
+        inv.slots().forEach(slot -> {
+            Optional<ItemStack> item = slot.peek();
+            if (item.isPresent()) {
+                try {
+                    json.add(new JsonPrimitive(SerializationHelper.serialize(item.get())));
+                } catch (IOException ex) {
+                    InfernoCore.logWarning("Failed to serialize ItemStack from inventory");
+                    ex.printStackTrace();
+                }
+            } else {
+                json.add(JsonNull.INSTANCE);
+            }
+        });
+
+        return json;
     }
 
 }

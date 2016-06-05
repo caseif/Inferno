@@ -77,7 +77,7 @@ public class InfernoCore extends CommonCore {
     @Override
     protected void orphan0(CommonComponent<?> component) {
         Sponge.getScheduler().createSyncExecutor(InfernoPlugin.getInstance())
-                .schedule(component::orphan, 0, TimeUnit.SECONDS);
+                .schedule(component::setOrphanFlag, 0, TimeUnit.SECONDS);
 
         component.orphan();
     }
