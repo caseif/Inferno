@@ -34,10 +34,8 @@ import net.caseif.flint.inferno.util.InfernoUtils;
 import net.caseif.flint.inferno.util.agent.chat.InfernoChatAgent;
 import net.caseif.flint.inferno.util.factory.InfernoFactoryRegistry;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.scheduler.SpongeExecutorService;
 
 import java.util.concurrent.TimeUnit;
 
@@ -78,8 +76,6 @@ public class InfernoCore extends CommonCore {
     protected void orphan0(CommonComponent<?> component) {
         Sponge.getScheduler().createSyncExecutor(InfernoPlugin.getInstance())
                 .schedule(component::setOrphanFlag, 0, TimeUnit.SECONDS);
-
-        component.orphan();
     }
 
     @Override

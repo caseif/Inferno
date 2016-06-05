@@ -158,4 +158,11 @@ public class InfernoRound extends CommonRound {
         }
     }
 
+    @SuppressWarnings("DuplicateThrows")
+    @Override
+    public void end(boolean rollback, boolean natural) throws IllegalStateException, OrphanedComponentException {
+        super.end(rollback, natural);
+        tickTask.cancel();
+    }
+
 }
