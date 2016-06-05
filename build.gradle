@@ -15,13 +15,20 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 group = 'net.caseif.flint.inferno'
-version = '1.2.0'
+version = '1.2.0-SNAPSHOT'
 
 // Extended project information
 ext.projectName = 'inferno'
 ext.description = 'The implementation of Flint minigame framework for the Sponge Minecraft server mod.'
 ext.inceptionYear = '2016'
 ext.packaging = 'jar'
+
+configurations {
+    shadow
+    compile {
+        extendsFrom shadow
+    }
+}
 
 repositories {
     mavenCentral()
@@ -55,8 +62,8 @@ ext {
 
 dependencies {
     compile 'org.spongepowered:spongeapi:4.0.3'
-    compile "net.caseif.flint.common:flintcommon:${commonVersion}"
-    compile 'net.minecrell.mcstats:statslite-sponge:0.2.2'
+    shadow "net.caseif.flint.common:flintcommon:${commonVersion}"
+    shadow 'net.minecrell.mcstats:statslite-sponge:0.2.2'
 
     checkstyle 'org.spongepowered:checkstyle:6.1.1-sponge1'
 }
@@ -100,9 +107,13 @@ processResources {
 }
 
 shadowJar {
+    configurations = [project.configurations.shadow]
     classifier = ''
 
-    include 'net.minecrell.mcstats:statslite-sponge'
+    dependencies {
+        include dependency('net.caseif.flint.common:flintcommon')
+        include dependency('net.minecrell.mcstats:statslite-sponge')
+    }
 
     relocate 'net.minecrell.mcstats', 'net.caseif.flint.inferno.lib.net.minecrell.mcstats'
 }
