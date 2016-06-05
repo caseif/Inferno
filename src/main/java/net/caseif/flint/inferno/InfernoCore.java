@@ -36,6 +36,10 @@ import net.caseif.flint.inferno.util.factory.InfernoFactoryRegistry;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.scheduler.SpongeExecutorService;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Sponge implementation of {@link FlintCore}.
@@ -72,7 +76,10 @@ public class InfernoCore extends CommonCore {
 
     @Override
     protected void orphan0(CommonComponent<?> component) {
-        throw new NotImplementedException("TODO");
+        Sponge.getScheduler().createSyncExecutor(InfernoPlugin.getInstance())
+                .schedule(component::orphan, 0, TimeUnit.SECONDS);
+
+        component.orphan();
     }
 
     @Override

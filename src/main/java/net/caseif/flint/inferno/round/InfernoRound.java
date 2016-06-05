@@ -25,6 +25,8 @@
 
 package net.caseif.flint.inferno.round;
 
+import static net.caseif.flint.common.util.helper.CommonPlayerHelper.getReturnLocation;
+
 import net.caseif.flint.challenger.Challenger;
 import net.caseif.flint.common.CommonCore;
 import net.caseif.flint.common.arena.CommonArena;
@@ -42,6 +44,7 @@ import net.caseif.flint.inferno.util.helper.PlayerHelper;
 import net.caseif.flint.lobby.LobbySign;
 import net.caseif.flint.round.JoinResult;
 import net.caseif.flint.round.LifecycleStage;
+import net.caseif.flint.util.physical.Location3D;
 
 import com.google.common.collect.ImmutableSet;
 import org.spongepowered.api.Sponge;
@@ -66,6 +69,7 @@ public class InfernoRound extends CommonRound {
         tickTask = Sponge.getScheduler().createTaskBuilder()
                 .name("infernoround:" + arena.getId())
                 .interval(1, TimeUnit.SECONDS)
+                .execute(new InfernoRoundWorker(this))
                 .submit(InfernoPlugin.getInstance());
 
         try {
@@ -118,6 +122,33 @@ public class InfernoRound extends CommonRound {
 
         getArena().getMinigame().getEventBus().post(new CommonChallengerJoinRoundEvent(challenger));
         return new CommonJoinResult(challenger);
+    }
+
+    @Override
+    public void removeChallenger(Challenger challenger, boolean isDisconnecting, boolean updateSigns)
+            throws OrphanedComponentException {
+        super.removeChallenger(challenger, isDisconnecting, updateSigns);
+
+        Player player = Sponge.getServer().getPlayer(challenger.getUniqueId()).get();
+        try {
+            PlayerHelper.popInventory(player);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to pop inventory for player " + player.getName(), ex);
+        }
+
+        //TODO: migrate this call
+        Location3D loc;
+        try {
+            loc = CommonPlayerHelper.getReturnLocation(player.getUniqueId()).orNull();
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to pop inventory for player " + player.getName());
+        }
+
+        if (loc == null) {
+            throw new RuntimeException("Failed to pop inventory for player " + player.getName());
+        }
+
+        player.setLocation(WorldLocationConverter.of(loc));
     }
 
     @Override

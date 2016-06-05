@@ -33,26 +33,18 @@ import net.caseif.flint.common.util.agent.rollback.CommonRollbackAgent;
 import net.caseif.flint.inferno.InfernoCore;
 import net.caseif.flint.inferno.arena.InfernoArena;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
+import net.caseif.flint.inferno.util.helper.SerializationHelper;
 import net.caseif.flint.util.physical.Location3D;
 
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.data.DataManager;
-import org.spongepowered.api.data.DataSerializable;
 import org.spongepowered.api.data.Transaction;
-import org.spongepowered.api.data.translator.ConfigurateTranslator;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntitySnapshot;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -68,13 +60,13 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
     public void logBlockChange(BlockSnapshot bs) throws IOException, SQLException {
         checkState(bs.getLocation().isPresent(), "BlockSnapshot does not have attached location");
         super.logChange(RECORD_TYPE_BLOCK_CHANGED, WorldLocationConverter.of(bs.getLocation().get()), null,
-                bs.getState().getType().getId(), 0, serialize(bs));
+                bs.getState().getType().getId(), 0, SerializationHelper.serialize(bs));
     }
 
     public void logEntityChange(EntitySnapshot es) throws IOException, SQLException {
         checkState(es.getLocation().isPresent(), "EntitySnapshot does not have attached location");
         super.logChange(RECORD_TYPE_ENTITY_CHANGED, WorldLocationConverter.of(es.getLocation().get()), null,
-                es.getType().getId(), 0, serialize(es));
+                es.getType().getId(), 0, SerializationHelper.serialize(es));
     }
 
     private void logEntityCreation(UUID uuid) throws IOException, SQLException {
@@ -106,7 +98,7 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
 
     @Override
     public void cacheEntities() {
-        throw new UnsupportedOperationException(); // not actually necessary on Sponge
+        // the ONE method I decide to call from Common. gotta settle for a no-op.
     }
 
     public static void checkBlockChange(Transaction<BlockSnapshot> transaction) {
@@ -158,39 +150,13 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
         }
     }
 
-    private String serialize(DataSerializable serializable) throws IOException {
-        ConfigurateTranslator translator = ConfigurateTranslator.instance();
-        ConfigurationNode node = translator.translateData(serializable.toContainer());
-
-        StringWriter strWriter = new StringWriter();
-        final BufferedWriter sink = new BufferedWriter(strWriter);
-        HoconConfigurationLoader.builder().setSink(() -> sink).build().save(node);
-
-        return strWriter.toString();
-    }
-
-    private <T extends DataSerializable> T deserialize(Class<T> clazz, String serial) throws IOException {
-        BufferedReader source = new BufferedReader(new StringReader(serial));
-        ConfigurationNode node = HoconConfigurationLoader.builder().setSource(() -> source).build().load();
-
-        DataManager manager = Sponge.getDataManager();
-        ConfigurateTranslator translator = ConfigurateTranslator.instance();
-
-        Optional<T> snapshot = manager.deserialize(clazz, translator.translateFrom(node));
-        if (snapshot.isPresent()) {
-            return snapshot.get();
-        } else {
-            throw new IOException("Failed to deserialize to BlockSnapshot!");
-        }
-    }
-
     private void deserializeBlock(String serial) throws IOException {
-        BlockSnapshot bs = deserialize(BlockSnapshot.class, serial);
+        BlockSnapshot bs = SerializationHelper.deserialize(BlockSnapshot.class, serial);
         bs.restore(true, false);
     }
 
     private void deserializeEntity(String serial) throws IOException {
-        EntitySnapshot es = deserialize(EntitySnapshot.class, serial);
+        EntitySnapshot es = SerializationHelper.deserialize(EntitySnapshot.class, serial);
         Optional<Entity> entity = es.restore();
 
         if (!entity.isPresent()) {

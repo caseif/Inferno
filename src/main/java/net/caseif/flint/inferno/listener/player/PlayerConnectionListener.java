@@ -30,14 +30,18 @@ import net.caseif.flint.common.CommonCore;
 import net.caseif.flint.common.util.helper.CommonPlayerHelper;
 import net.caseif.flint.inferno.minigame.InfernoMinigame;
 import net.caseif.flint.inferno.round.InfernoRound;
+import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.inferno.util.helper.PlayerHelper;
 import net.caseif.flint.minigame.Minigame;
+import net.caseif.flint.util.physical.Location3D;
 
 import com.google.common.base.Optional;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.io.IOException;
 
@@ -93,13 +97,13 @@ public final class PlayerConnectionListener {
             }
 
             try {
-                PlayerHelper.popLocation(player);
-            } catch (IllegalArgumentException ex) {
-                if (!ignoreOfflineFlag) {
-                    CommonCore.logSevere("Failed to pop location for player " + player.getName());
-                    ex.printStackTrace();
+                Optional<Location3D> loc = CommonPlayerHelper.getReturnLocation(player.getUniqueId());
+                if (loc.isPresent()) {
+                    player.setLocation(WorldLocationConverter.of(loc.get()));
+                } else if (!ignoreOfflineFlag) {
+                    throw new RuntimeException("Failed to pop location for player " + player.getName());
                 }
-            } catch (IOException ex) {
+            } catch (IllegalArgumentException | IOException ex) {
                 CommonCore.logSevere("Failed to pop location for player " + player.getName());
                 ex.printStackTrace();
             }
