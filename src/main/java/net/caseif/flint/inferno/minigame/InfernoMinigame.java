@@ -28,6 +28,7 @@ package net.caseif.flint.inferno.minigame;
 import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.lobby.wizard.IWizardManager;
 import net.caseif.flint.common.minigame.CommonMinigame;
+import net.caseif.flint.common.util.file.CommonDataFiles;
 import net.caseif.flint.inferno.InfernoCore;
 import net.caseif.flint.inferno.lobby.wizard.InfernoWizardManager;
 import net.caseif.flint.inferno.util.converter.LocationConverter;
@@ -54,9 +55,11 @@ public class InfernoMinigame extends CommonMinigame {
 
     public InfernoMinigame(PluginContainer pluginContainer) {
         super();
-
         this.pluginContainer = pluginContainer;
+
+        CommonDataFiles.createMinigameDataFiles(this);
         wizardManager = new InfernoWizardManager(this);
+        loadArenas(); //TODO: why is all this shit not in Common already
     }
 
     @Override
@@ -90,6 +93,7 @@ public class InfernoMinigame extends CommonMinigame {
         return this.pluginContainer.getId();
     }
 
+    //TODO: move this to Common
     @Override
     public Arena createArena(String id, String name, Location3D location, Boundary boundary)
             throws IllegalArgumentException {

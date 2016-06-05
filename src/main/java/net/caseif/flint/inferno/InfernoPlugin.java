@@ -25,6 +25,7 @@
 
 package net.caseif.flint.inferno;
 
+import net.caseif.flint.common.util.file.CommonDataFiles;
 import net.caseif.flint.inferno.listener.misc.LobbyListener;
 import net.caseif.flint.inferno.listener.player.PlayerConnectionListener;
 import net.caseif.flint.inferno.listener.player.PlayerWorldListener;
@@ -67,6 +68,9 @@ public final class InfernoPlugin {
     @Listener(order = Order.PRE)
     public void onPreInitialize(GamePreInitializationEvent event) {
         InfernoCore.initialize();
+
+        CommonDataFiles.createCoreDataFiles();
+
         this.stats.start();
     }
 

@@ -25,34 +25,40 @@
 
 package net.caseif.flint.inferno.util;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import net.caseif.flint.common.util.PlatformUtils;
 import net.caseif.flint.inferno.InfernoPlugin;
 import net.caseif.flint.minigame.Minigame;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
+import java.nio.file.Paths;
 
 public class InfernoUtils implements PlatformUtils {
 
+    private static final String MINIGAME_DATA_FOLDER = "minigames";
+
     @Override
     public File getDataFolder() {
-        return InfernoPlugin.getInstance().getConfigDirectory();
+        File folder = InfernoPlugin.getInstance().getConfigDirectory();
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        return folder;
     }
 
     @Override
     public File getDataFolder(Minigame minigame) {
-        Optional<PluginContainer> pc = Sponge.getPluginManager().getPlugin(minigame.getPlugin());
-        checkState(pc.isPresent(), "Cannot get PluginContainer from Minigame");
-
-        Optional<Path> path = pc.get().getAssetDirectory();
-        checkState(path.isPresent(), "Cannot get Path for plugin " + minigame.getPlugin());
-
-        return path.get().toFile();
+        Path dir = Paths.get(getDataFolder().getAbsolutePath(), MINIGAME_DATA_FOLDER, minigame.getPlugin());
+        if (!Files.exists(dir)) {
+            try {
+                Files.createDirectories(dir);
+            } catch (IOException ex) {
+                throw new RuntimeException("Failed to create data directory for minigame " + minigame.getPlugin(), ex);
+            }
+        }
+        return dir.toFile();
     }
 
 }
