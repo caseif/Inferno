@@ -31,6 +31,7 @@ import net.caseif.flint.inferno.listener.player.PlayerConnectionListener;
 import net.caseif.flint.inferno.listener.player.PlayerWorldListener;
 import net.caseif.flint.inferno.listener.rollback.RollbackBlockListener;
 import net.caseif.flint.inferno.listener.rollback.RollbackEntityListener;
+import net.caseif.flint.inferno.listener.rollback.RollbackInventoryListener;
 import net.caseif.flint.round.Round;
 
 import com.google.inject.Inject;
@@ -68,9 +69,8 @@ public final class InfernoPlugin {
     @Listener(order = Order.PRE)
     public void onPreInitialize(GamePreInitializationEvent event) {
         InfernoCore.initialize();
-
         CommonDataFiles.createCoreDataFiles();
-
+        registerEventListeners();
         this.stats.start();
     }
 
@@ -105,6 +105,7 @@ public final class InfernoPlugin {
 
         Sponge.getEventManager().registerListeners(this, new RollbackBlockListener());
         Sponge.getEventManager().registerListeners(this, new RollbackEntityListener());
+        Sponge.getEventManager().registerListeners(this, new RollbackInventoryListener());
     }
 
 }

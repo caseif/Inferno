@@ -45,7 +45,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageReceiver;
@@ -60,7 +60,7 @@ import java.util.UUID;
 public class PlayerWorldListener {
 
     @Listener(order = Order.LAST)
-    public void onEntityTeleport(DisplaceEntityEvent.Teleport event) {
+    public void onEntityTeleport(MoveEntityEvent.Teleport event) {
         if (event.getTargetEntity().getType() != EntityTypes.PLAYER) {
             return; // not a player
         }

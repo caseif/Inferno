@@ -61,7 +61,7 @@ ext {
 }
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:4.0.3'
+    compile 'org.spongepowered:spongeapi:5.0.0-SNAPSHOT'
     shadow "net.caseif.flint.common:flintcommon:${commonVersion}"
     shadow 'net.minecrell.mcstats:statslite-sponge:0.2.2'
 

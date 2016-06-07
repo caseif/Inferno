@@ -59,12 +59,7 @@ public class InfernoArena extends CommonArena {
     public InfernoArena(CommonMinigame parent, String id, String name, Location3D initialSpawn, Boundary boundary)
             throws IllegalArgumentException {
         super(parent, id, name, initialSpawn, boundary);
-        try {
-            parent.getArenaMap().put(id.toLowerCase(), this); //TODO: this needs to be moved to Common
-            store(); //TODO: this too
-        } catch (IOException ex) {
-            throw new RuntimeException("Failed to store arena " + id, ex);
-        }
+        parent.getArenaMap().put(id.toLowerCase(), this); //TODO: this needs to be moved to Common
     }
 
     @Override

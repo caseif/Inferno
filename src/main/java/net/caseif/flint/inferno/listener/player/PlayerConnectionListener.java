@@ -86,7 +86,7 @@ public final class PlayerConnectionListener {
             // these two try-blocks are separate so they can both run even if one fails
             try {
                 PlayerHelper.popInventory(player);
-            } catch (IllegalArgumentException ex) {
+            } catch (IllegalStateException ex) {
                 if (!ignoreOfflineFlag) {
                     CommonCore.logSevere("Failed to pop inventory for player " + player.getName());
                     ex.printStackTrace();
@@ -103,7 +103,12 @@ public final class PlayerConnectionListener {
                 } else if (!ignoreOfflineFlag) {
                     throw new RuntimeException("Failed to pop location for player " + player.getName());
                 }
-            } catch (IllegalArgumentException | IOException ex) {
+            } catch (IllegalStateException ex) {
+                if (!ignoreOfflineFlag) {
+                    CommonCore.logSevere("Failed to pop location for player " + player.getName());
+                    ex.printStackTrace();
+                }
+            } catch (IOException ex) {
                 CommonCore.logSevere("Failed to pop location for player " + player.getName());
                 ex.printStackTrace();
             }

@@ -27,10 +27,12 @@ package net.caseif.flint.inferno.listener.rollback;
 
 import net.caseif.flint.inferno.util.agent.rollback.InfernoRollbackAgent;
 
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.tileentity.TargetTileEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.entity.TargetEntityEvent;
 
@@ -38,14 +40,18 @@ public class RollbackEntityListener {
 
     @Listener(order = Order.POST)
     public void onSpawnEntity(SpawnEntityEvent event) {
-        event.getEntitySnapshots().stream().filter(entity -> entity.getType() != EntityTypes.HUMAN)
+        event.getEntities().stream().filter(entity -> entity.getType() != EntityTypes.PLAYER)
                 .forEach(entity -> InfernoRollbackAgent.checkEntityChange(entity, true));
     }
 
     @Listener(order = Order.POST)
     public void onTargetEntity(TargetEntityEvent event) {
-        if (event.getTargetEntity().getType() != EntityTypes.HUMAN) {
-            InfernoRollbackAgent.checkEntityChange(event.getTargetEntity().createSnapshot());
+        if (event instanceof MoveEntityEvent) {
+            return; // listening to move events is not f*cking necessary
+        }
+
+        if (event.getTargetEntity().getType() != EntityTypes.PLAYER) {
+            InfernoRollbackAgent.checkEntityChange(event.getTargetEntity());
         }
     }
 

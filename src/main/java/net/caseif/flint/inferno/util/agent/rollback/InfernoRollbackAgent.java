@@ -65,7 +65,8 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
 
     public void logEntityChange(EntitySnapshot es) throws IOException, SQLException {
         checkState(es.getLocation().isPresent(), "EntitySnapshot does not have attached location");
-        super.logChange(RECORD_TYPE_ENTITY_CHANGED, WorldLocationConverter.of(es.getLocation().get()), null,
+        super.logChange(RECORD_TYPE_ENTITY_CHANGED, WorldLocationConverter.of(es.getLocation().get()),
+                es.getUniqueId().orElse(UUID.randomUUID()), // maybe I'm a terrible person for this, idk
                 es.getType().getId(), 0, SerializationHelper.serialize(es));
     }
 
@@ -122,26 +123,21 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
         }
     }
 
-    public static void checkEntityChange(EntitySnapshot entity) {
+    public static void checkEntityChange(Entity entity) {
         checkEntityChange(entity, false);
     }
 
-    public static void checkEntityChange(EntitySnapshot entity, boolean newlyCreated) {
-        Optional<Location<World>> loc = entity.getLocation();
-        Optional<UUID> uuid = entity.getUniqueId();
-        if (!loc.isPresent() || !uuid.isPresent()) {
-            return;
-        }
-
-        List<Arena> arenas = checkChangeAtLocation(WorldLocationConverter.of(loc.get()));
+    public static void checkEntityChange(Entity entity, boolean newlyCreated) {
+        Location<World> loc = entity.getLocation();
+        List<Arena> arenas = checkChangeAtLocation(WorldLocationConverter.of(loc));
         for (Arena arena : arenas) {
             try {
                 if (newlyCreated) {
                     ((InfernoRollbackAgent) ((InfernoArena) arena).getRollbackAgent())
-                            .logEntityCreation(entity.getUniqueId().get());
+                            .logEntityCreation(entity.getUniqueId());
                 } else {
                     ((InfernoRollbackAgent) ((InfernoArena) arena).getRollbackAgent())
-                            .logEntityChange(entity);
+                            .logEntityChange(entity.createSnapshot());
                 }
             } catch (IOException | SQLException ex) {
                 throw new RuntimeException("Failed to log entity mutation event for rollback in arena "

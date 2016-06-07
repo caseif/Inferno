@@ -26,6 +26,7 @@
 package net.caseif.flint.inferno.minigame;
 
 import net.caseif.flint.arena.Arena;
+import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.lobby.wizard.IWizardManager;
 import net.caseif.flint.common.minigame.CommonMinigame;
 import net.caseif.flint.common.util.file.CommonDataFiles;
@@ -42,6 +43,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.World;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -97,7 +99,14 @@ public class InfernoMinigame extends CommonMinigame {
     @Override
     public Arena createArena(String id, String name, Location3D location, Boundary boundary)
             throws IllegalArgumentException {
-        return InfernoCore.getFactoryRegistry().getArenaFactory().createArena(this, id, name, location, boundary);
+        Arena arena
+                = InfernoCore.getFactoryRegistry().getArenaFactory().createArena(this, id, name, location, boundary);
+        try {
+            ((CommonArena) arena).store();
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to store arena " + id, ex);
+        }
+        return arena;
     }
 
     public IWizardManager getLobbyWizardManager() {
