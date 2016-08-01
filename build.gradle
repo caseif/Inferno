@@ -15,7 +15,7 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 group = 'net.caseif.flint.inferno'
-version = '1.2.0-rc1'
+version = '1.2.0-SNAPSHOT'
 
 // Extended project information
 ext.projectName = 'inferno'

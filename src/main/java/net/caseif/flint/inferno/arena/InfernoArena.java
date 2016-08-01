@@ -32,6 +32,7 @@ import net.caseif.flint.common.lobby.CommonLobbySign;
 import net.caseif.flint.common.minigame.CommonMinigame;
 import net.caseif.flint.component.exception.OrphanedComponentException;
 import net.caseif.flint.exception.rollback.RollbackException;
+import net.caseif.flint.inferno.InfernoPlugin;
 import net.caseif.flint.inferno.lobby.type.InfernoChallengerListingLobbySign;
 import net.caseif.flint.inferno.lobby.type.InfernoStatusLobbySign;
 import net.caseif.flint.inferno.util.agent.rollback.InfernoRollbackAgent;
@@ -48,6 +49,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityTypes;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -111,7 +114,9 @@ public class InfernoArena extends CommonArena {
         if (!getLobbySignMap().containsKey(location)) {
             java.util.Optional<TileEntity> tile = loc.getExtent().getTileEntity(LocationConverter.floor(location));
             if (!tile.isPresent() || tile.get().getType() != TileEntityTypes.SIGN) {
-                loc.setBlockType(BlockTypes.WALL_SIGN); //TODO: maybe detect which sign type it should be?
+                //TODO: maybe detect which sign type it should be?
+                loc.setBlockType(BlockTypes.WALL_SIGN,
+                        Cause.of(NamedCause.of("inferno:lobbyCreation", InfernoPlugin.getInstance())));
             }
             return true;
         }

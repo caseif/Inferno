@@ -41,6 +41,7 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntitySnapshot;
+import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -148,7 +149,7 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
 
     private void deserializeBlock(String serial) throws IOException {
         BlockSnapshot bs = SerializationHelper.deserialize(BlockSnapshot.class, serial);
-        bs.restore(true, false);
+        bs.restore(true, BlockChangeFlag.NONE);
     }
 
     private void deserializeEntity(String serial) throws IOException {
