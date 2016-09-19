@@ -30,7 +30,8 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataManager;
 import org.spongepowered.api.data.DataSerializable;
-import org.spongepowered.api.data.translator.ConfigurateTranslator;
+import org.spongepowered.api.data.persistence.DataTranslator;
+import org.spongepowered.api.data.persistence.DataTranslators;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,8 +43,8 @@ import java.util.Optional;
 public class SerializationHelper {
 
     public static String serialize(DataSerializable serializable) throws IOException {
-        ConfigurateTranslator translator = ConfigurateTranslator.instance();
-        ConfigurationNode node = translator.translateData(serializable.toContainer());
+        DataTranslator<ConfigurationNode> translator = DataTranslators.CONFIGURATION_NODE;
+        ConfigurationNode node = translator.translate(serializable.toContainer());
 
         StringWriter strWriter = new StringWriter();
         final BufferedWriter sink = new BufferedWriter(strWriter);
@@ -57,9 +58,9 @@ public class SerializationHelper {
         ConfigurationNode node = HoconConfigurationLoader.builder().setSource(() -> source).build().load();
 
         DataManager manager = Sponge.getDataManager();
-        ConfigurateTranslator translator = ConfigurateTranslator.instance();
+        DataTranslator<ConfigurationNode> translator = DataTranslators.CONFIGURATION_NODE;
 
-        Optional<T> snapshot = manager.deserialize(clazz, translator.translateFrom(node));
+        Optional<T> snapshot = manager.deserialize(clazz, translator.translate(node));
         if (snapshot.isPresent()) {
             return snapshot.get();
         } else {

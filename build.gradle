@@ -15,7 +15,7 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 group = 'net.caseif.flint.inferno'
-version = '1.2.0-rc2'
+version = '1.2.0'
 
 // Extended project information
 ext.projectName = 'inferno'
@@ -57,7 +57,7 @@ ext {
                     + (System.getenv('BUILD_NUMBER') ? '-jnks' + System.getenv('BUILD_NUMBER') : '')
     ) : ''
 
-    commonVersion = '1.2.2'
+    commonVersion = '1.2.4'
 }
 
 dependencies {
@@ -130,5 +130,5 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '3.0'
 }
