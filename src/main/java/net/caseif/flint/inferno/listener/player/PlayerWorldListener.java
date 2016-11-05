@@ -49,6 +49,7 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.channel.MessageReceiver;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -111,7 +112,8 @@ public class PlayerWorldListener {
                 return;
             }
 
-            Iterator<MessageReceiver> it = event.getChannel().get().getMembers().iterator();
+            MessageChannel mutable = event.getChannel().get().asMutable();
+            Iterator<MessageReceiver> it = mutable.getMembers().iterator();
             while (it.hasNext()) {
                 MessageReceiver recip = it.next();
 
@@ -126,7 +128,6 @@ public class PlayerWorldListener {
                             player.get().getDisplayNameData().displayName().get().toPlain(),
                             event.getMessage().toPlain()
                     );
-                    it.remove();
                     continue;
                 }
 
@@ -135,6 +136,7 @@ public class PlayerWorldListener {
                     it.remove();
                 }
             }
+            event.setChannel(mutable);
         }
     }
 
