@@ -27,6 +27,7 @@ package net.caseif.flint.inferno.listener.player;
 
 import net.caseif.flint.challenger.Challenger;
 import net.caseif.flint.common.CommonCore;
+import net.caseif.flint.common.challenger.CommonChallenger;
 import net.caseif.flint.common.lobby.wizard.IWizardManager;
 import net.caseif.flint.config.ConfigNode;
 import net.caseif.flint.inferno.minigame.InfernoMinigame;
@@ -70,7 +71,7 @@ public class PlayerWorldListener {
         }
 
         Optional<Challenger> chal = CommonCore.getChallenger(event.getTargetEntity().getUniqueId());
-        if (chal.isPresent()) {
+        if (chal.isPresent() && !((CommonChallenger) chal.get()).isLeaving()) {
             Boundary bound = chal.get().getRound().getArena().getBoundary();
             if (!bound.contains(LocationConverter.of(event.getToTransform().getPosition()))) {
                 if (chal.get().getRound().getConfigValue(ConfigNode.ALLOW_EXIT_BOUNDARY)) {
