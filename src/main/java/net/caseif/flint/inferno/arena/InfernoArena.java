@@ -59,10 +59,9 @@ import java.sql.SQLException;
 
 public class InfernoArena extends CommonArena {
 
-    public InfernoArena(CommonMinigame parent, String id, String name, Location3D initialSpawn, Boundary boundary)
+    public InfernoArena(CommonMinigame parent, String id, String name, Location3D[] initialSpawn, Boundary boundary)
             throws IllegalArgumentException {
         super(parent, id, name, initialSpawn, boundary);
-        parent.getArenaMap().put(id.toLowerCase(), this); //TODO: this needs to be moved to Common
     }
 
     @Override

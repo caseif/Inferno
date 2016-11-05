@@ -23,23 +23,33 @@
  * THE SOFTWARE.
  */
 
-package net.caseif.flint.inferno.util.factory;
+package net.caseif.flint.inferno.util.unsafe;
 
-import net.caseif.flint.common.arena.CommonArena;
-import net.caseif.flint.common.minigame.CommonMinigame;
-import net.caseif.flint.common.util.factory.IArenaFactory;
-import net.caseif.flint.inferno.arena.InfernoArena;
-import net.caseif.flint.util.physical.Boundary;
-import net.caseif.flint.util.physical.Location3D;
+import net.caseif.flint.common.lobby.populator.StockChallengerListingLobbySignPopulator;
+import net.caseif.flint.common.util.unsafe.CommonUnsafeUtil;
+import net.caseif.flint.inferno.lobby.populator.RichStockStatusLobbySignPopulator;
+import net.caseif.flint.lobby.populator.LobbySignPopulator;
+import net.caseif.flint.util.unsafe.UnsafeUtil;
 
-/**
- * The implementation of {@link IArenaFactory}.
- */
-public class InfernoArenaFactory implements IArenaFactory {
+public class InfernoUnsafeUtil extends CommonUnsafeUtil {
+
+    private static final LobbySignPopulator STATUS_POPULATOR = new RichStockStatusLobbySignPopulator();
+    private static final LobbySignPopulator LISTING_POPULATOR = new StockChallengerListingLobbySignPopulator();
+
+    public static void initialize() {
+        INSTANCE = new InfernoUnsafeUtil();
+    }
 
     @Override
-    public CommonArena createArena(CommonMinigame parent, String id, String name, Location3D[] spawnPoints,
-                                   Boundary boundary) {
-        return new InfernoArena(parent, id, name, spawnPoints, boundary);
+    public LobbySignPopulator getDefaultStatusLobbySignPopulator() {
+        testInternalUse();
+        return STATUS_POPULATOR;
     }
+
+    @Override
+    public LobbySignPopulator getDefaultChallengerListingLobbySignPopulator() {
+        testInternalUse();
+        return LISTING_POPULATOR;
+    }
+
 }

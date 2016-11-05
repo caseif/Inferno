@@ -29,6 +29,8 @@ import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.lobby.wizard.IWizardManager;
 import net.caseif.flint.common.minigame.CommonMinigame;
+import net.caseif.flint.common.util.factory.FactoryRegistry;
+import net.caseif.flint.common.util.factory.IArenaFactory;
 import net.caseif.flint.common.util.file.CommonDataFiles;
 import net.caseif.flint.inferno.InfernoCore;
 import net.caseif.flint.inferno.lobby.wizard.InfernoWizardManager;
@@ -95,12 +97,12 @@ public class InfernoMinigame extends CommonMinigame {
         return this.pluginContainer.getId();
     }
 
-    //TODO: move this to Common
     @Override
     public Arena createArena(String id, String name, Location3D location, Boundary boundary)
             throws IllegalArgumentException {
         Arena arena
-                = InfernoCore.getFactoryRegistry().getArenaFactory().createArena(this, id, name, location, boundary);
+                = ((IArenaFactory) FactoryRegistry.getFactory(Arena.class))
+                .createArena(this, id, name, new Location3D[] {location}, boundary);
         try {
             ((CommonArena) arena).store();
         } catch (IOException ex) {

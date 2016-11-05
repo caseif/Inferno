@@ -27,16 +27,22 @@ package net.caseif.flint.inferno.lobby;
 
 import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.lobby.CommonLobbySign;
-import net.caseif.flint.component.exception.OrphanedComponentException;
 import net.caseif.flint.inferno.InfernoPlugin;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.util.physical.Location3D;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class InfernoLobbySign extends CommonLobbySign {
 
@@ -54,8 +60,8 @@ public class InfernoLobbySign extends CommonLobbySign {
     @Override
     protected boolean validate() {
         final Location<World> location = WorldLocationConverter.of(this.getLocation());
-        return location.getExtent().getBlock(location.getBlockPosition()).getType() == BlockTypes.WALL_SIGN
-                || location.getExtent().getBlock(location.getBlockPosition()).getType() == BlockTypes.STANDING_SIGN;
+        return location.getBlock().getType() == BlockTypes.WALL_SIGN
+                || location.getBlock().getType() == BlockTypes.STANDING_SIGN;
     }
 
     @Override
@@ -63,19 +69,15 @@ public class InfernoLobbySign extends CommonLobbySign {
         return SIGN_SIZE;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void update() throws OrphanedComponentException {
-        this.checkState();
-
-        switch (this.getType()) {
-            case STATUS:
-                break;
-            case CHALLENGER_LISTING:
-                break;
-            default: // wtf
-                throw new AssertionError();
+    protected void updatePhysicalSign(String... lines) {
+        Optional<TileEntity> te = WorldLocationConverter.of(getLocation()).getTileEntity();
+        if (!(te.isPresent() && te.get() instanceof Sign)) {
+            return;
         }
-        throw new NotImplementedException("TODO");
+        te.get().offer(Keys.SIGN_LINES, Arrays.stream(lines)
+                .map(TextSerializers.LEGACY_FORMATTING_CODE::deserialize).collect(Collectors.toList()));
     }
 
 }

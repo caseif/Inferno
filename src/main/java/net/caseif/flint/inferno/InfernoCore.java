@@ -26,13 +26,23 @@
 package net.caseif.flint.inferno;
 
 import net.caseif.flint.FlintCore;
+import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.CommonCore;
 import net.caseif.flint.common.component.CommonComponent;
 import net.caseif.flint.common.util.agent.chat.IChatAgent;
-import net.caseif.flint.common.util.factory.IFactoryRegistry;
+import net.caseif.flint.common.util.agent.rollback.IRollbackAgent;
+import net.caseif.flint.common.util.factory.FactoryRegistry;
 import net.caseif.flint.inferno.util.InfernoUtils;
 import net.caseif.flint.inferno.util.agent.chat.InfernoChatAgent;
-import net.caseif.flint.inferno.util.factory.InfernoFactoryRegistry;
+import net.caseif.flint.inferno.util.factory.InfernoArenaFactory;
+import net.caseif.flint.inferno.util.factory.InfernoLobbySignFactory;
+import net.caseif.flint.inferno.util.factory.InfernoMinigameFactory;
+import net.caseif.flint.inferno.util.factory.InfernoRollbackAgentFactory;
+import net.caseif.flint.inferno.util.factory.InfernoRoundFactory;
+import net.caseif.flint.inferno.util.unsafe.InfernoUnsafeUtil;
+import net.caseif.flint.lobby.LobbySign;
+import net.caseif.flint.minigame.Minigame;
+import net.caseif.flint.round.Round;
 
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.Sponge;
@@ -45,10 +55,14 @@ import java.util.concurrent.TimeUnit;
 public class InfernoCore extends CommonCore {
 
     private static final InfernoChatAgent CHAT_AGENT = new InfernoChatAgent();
-    private static final InfernoFactoryRegistry FACTORY_REGISTRY = new InfernoFactoryRegistry();
 
     static void initialize() {
         INSTANCE = new InfernoCore();
+
+        CommonCore.initializeCommon();
+        registerFactories();
+        InfernoUnsafeUtil.initialize();
+
         PLATFORM_UTILS = new InfernoUtils();
     }
 
@@ -84,12 +98,16 @@ public class InfernoCore extends CommonCore {
     }
 
     @Override
-    protected IFactoryRegistry getFactoryRegistry0() {
-        return FACTORY_REGISTRY;
-    }
-
-    @Override
     protected String getImplementationName0() {
         return StringUtils.capitalize(InfernoCore.class.getPackage().getImplementationTitle());
     }
+
+    private static void registerFactories() {
+        FactoryRegistry.registerFactory(Arena.class, new InfernoArenaFactory());
+        FactoryRegistry.registerFactory(LobbySign.class, new InfernoLobbySignFactory());
+        FactoryRegistry.registerFactory(Minigame.class, new InfernoMinigameFactory());
+        FactoryRegistry.registerFactory(IRollbackAgent.class, new InfernoRollbackAgentFactory());
+        FactoryRegistry.registerFactory(Round.class, new InfernoRoundFactory());
+    }
+
 }

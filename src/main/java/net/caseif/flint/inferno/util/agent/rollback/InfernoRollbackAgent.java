@@ -30,7 +30,9 @@ import static com.google.common.base.Preconditions.checkState;
 import net.caseif.flint.arena.Arena;
 import net.caseif.flint.common.arena.CommonArena;
 import net.caseif.flint.common.util.agent.rollback.CommonRollbackAgent;
+import net.caseif.flint.common.util.agent.rollback.RollbackRecord;
 import net.caseif.flint.inferno.InfernoCore;
+import net.caseif.flint.inferno.InfernoPlugin;
 import net.caseif.flint.inferno.arena.InfernoArena;
 import net.caseif.flint.inferno.util.converter.WorldLocationConverter;
 import net.caseif.flint.inferno.util.helper.SerializationHelper;
@@ -58,41 +60,45 @@ public class InfernoRollbackAgent extends CommonRollbackAgent {
         super(arena);
     }
 
+    @Override
+    protected void delay(Runnable runnable) {
+        Sponge.getScheduler().createTaskBuilder().delayTicks(1L).execute(runnable).submit(InfernoPlugin.getInstance());
+    }
+
     public void logBlockChange(BlockSnapshot bs) throws IOException, SQLException {
-        checkState(bs.getLocation().isPresent(), "BlockSnapshot does not have attached location");
-        super.logChange(RECORD_TYPE_BLOCK_CHANGED, WorldLocationConverter.of(bs.getLocation().get()), null,
-                bs.getState().getType().getId(), 0, SerializationHelper.serialize(bs));
+        checkState(bs.getLocation().isPresent(), "BlockSnapshot does not have attached location");;
+        super.logChange(RollbackRecord.createBlockRecord(-1, WorldLocationConverter.of(bs.getLocation().get()),
+                        bs.getState().getType().getId(), 0, SerializationHelper.serialize(bs)));
     }
 
     public void logEntityChange(EntitySnapshot es) throws IOException, SQLException {
         checkState(es.getLocation().isPresent(), "EntitySnapshot does not have attached location");
-        super.logChange(RECORD_TYPE_ENTITY_CHANGED, WorldLocationConverter.of(es.getLocation().get()),
+        super.logChange(RollbackRecord.createEntityChangeRecord(-1,
                 es.getUniqueId().orElse(UUID.randomUUID()), // maybe I'm a terrible person for this, idk
-                es.getType().getId(), 0, SerializationHelper.serialize(es));
+                WorldLocationConverter.of(es.getLocation().get()),
+                es.getType().getId(), SerializationHelper.serialize(es)));
     }
 
     private void logEntityCreation(UUID uuid) throws IOException, SQLException {
-        super.logChange(RECORD_TYPE_ENTITY_CREATED, new Location3D(getArena().getWorld(), 0, 0, 0), uuid, "", 0, null);
+        super.logChange(RollbackRecord.createEntityCreationRecord(-1, uuid, getArena().getWorld()));
     }
 
     @Override
-    public void rollbackBlock(int id, Location3D location, String type, int data, String stateSerial)
-            throws IOException {
-        deserializeBlock(stateSerial);
+    public void rollbackBlock(RollbackRecord record) throws IOException {
+        deserializeBlock(record.getStateSerial());
     }
 
     @Override
-    public void rollbackEntityChange(int id, UUID uuid, Location3D location, String type, String stateSerial)
-            throws IOException {
-        deserializeEntity(stateSerial);
+    public void rollbackEntityChange(RollbackRecord record) throws IOException {
+        deserializeEntity(record.getStateSerial());
     }
 
     @Override
-    public void rollbackEntityCreation(int id, UUID uuid) {
+    public void rollbackEntityCreation(RollbackRecord record) {
         Optional<World> world = Sponge.getServer().getWorld(getArena().getWorld());
         checkState(world.isPresent(), "Arena world is not present");
 
-        Optional<Entity> entity = world.get().getEntity(uuid);
+        Optional<Entity> entity = world.get().getEntity(record.getUuid());
         if (entity.isPresent()) {
             entity.get().remove();
         }
