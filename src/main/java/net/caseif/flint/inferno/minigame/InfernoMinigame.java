@@ -97,20 +97,6 @@ public class InfernoMinigame extends CommonMinigame {
         return this.pluginContainer.getId();
     }
 
-    @Override
-    public Arena createArena(String id, String name, Location3D location, Boundary boundary)
-            throws IllegalArgumentException {
-        Arena arena
-                = ((IArenaFactory) FactoryRegistry.getFactory(Arena.class))
-                .createArena(this, id, name, new Location3D[] {location}, boundary);
-        try {
-            ((CommonArena) arena).store();
-        } catch (IOException ex) {
-            throw new RuntimeException("Failed to store arena " + id, ex);
-        }
-        return arena;
-    }
-
     public IWizardManager getLobbyWizardManager() {
         return wizardManager;
     }
