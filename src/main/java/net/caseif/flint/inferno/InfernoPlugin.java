@@ -58,7 +58,7 @@ import java.io.File;
  */
 @Plugin(id = "inferno",
         name = "Inferno",
-        version = "1.3.0-SNAPSHOT",
+        version = "1.3.0",
         description = "The Sponge implementation of the Flint engine.")
 public final class InfernoPlugin {
 
