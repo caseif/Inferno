@@ -1,6 +1,8 @@
 plugins {
     id 'checkstyle'
 
+    id 'signing'
+
     id 'org.spongepowered.plugin' version '0.7'
     id 'net.minecrell.licenser' version '0.3'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
@@ -31,6 +33,10 @@ repositories {
     maven {
         name 'minecrell'
         url 'http://repo.minecrell.net/releases'
+    }
+    maven {
+        name 'sponge'
+        url 'https://repo.spongepowered.org/maven/'
     }
 }
 
@@ -115,6 +121,10 @@ task sourceJar(type: Jar) {
 artifacts {
     archives shadowJar
     archives sourceJar
+}
+
+signing {
+    sign configurations.archives
 }
 
 task wrapper(type: Wrapper) {
