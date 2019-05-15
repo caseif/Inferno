@@ -50,7 +50,8 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityTypes;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -114,8 +115,7 @@ public class InfernoArena extends CommonArena {
             java.util.Optional<TileEntity> tile = loc.getExtent().getTileEntity(LocationConverter.floor(location));
             if (!tile.isPresent() || tile.get().getType() != TileEntityTypes.SIGN) {
                 //TODO: maybe detect which sign type it should be?
-                loc.setBlockType(BlockTypes.WALL_SIGN,
-                        Cause.of(NamedCause.of("inferno:lobbyCreation", InfernoPlugin.getInstance())));
+                loc.setBlockType(BlockTypes.WALL_SIGN, BlockChangeFlags.NEIGHBOR);
             }
             return true;
         }
