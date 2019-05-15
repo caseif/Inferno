@@ -41,7 +41,7 @@ import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.round.Round;
 
 import com.google.inject.Inject;
-import net.minecrell.mcstats.SpongeStatsLite;
+import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -56,15 +56,12 @@ import java.io.File;
 /**
  * The Inferno Sponge plugin.
  */
-@Plugin(id = "inferno",
-        name = "Inferno",
-        version = "1.3.1",
-        description = "The Sponge implementation of the Flint engine.")
+@Plugin(id = "inferno", description = "The Sponge implementation of the Flint engine.")
 public final class InfernoPlugin {
 
     private static InfernoPlugin instance;
 
-    @Inject private SpongeStatsLite stats;
+    @Inject private Metrics2 metrics;
     @Inject private Logger logger;
     @Inject @ConfigDir(sharedRoot = false) private File configDir;
 
@@ -77,7 +74,6 @@ public final class InfernoPlugin {
         InfernoCore.initialize();
         CommonDataFiles.createCoreDataFiles();
         registerEventListeners();
-        this.stats.start();
     }
 
     @Listener
