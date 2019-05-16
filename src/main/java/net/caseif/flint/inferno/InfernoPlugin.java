@@ -25,9 +25,6 @@
 
 package net.caseif.flint.inferno;
 
-import net.caseif.flint.arena.Arena;
-import net.caseif.flint.common.util.agent.rollback.IRollbackAgent;
-import net.caseif.flint.common.util.factory.FactoryRegistry;
 import net.caseif.flint.common.util.file.CommonDataFiles;
 import net.caseif.flint.inferno.listener.misc.LobbyListener;
 import net.caseif.flint.inferno.listener.player.PlayerConnectionListener;
@@ -35,9 +32,6 @@ import net.caseif.flint.inferno.listener.player.PlayerWorldListener;
 import net.caseif.flint.inferno.listener.rollback.RollbackBlockListener;
 import net.caseif.flint.inferno.listener.rollback.RollbackEntityListener;
 import net.caseif.flint.inferno.listener.rollback.RollbackInventoryListener;
-import net.caseif.flint.inferno.util.factory.InfernoArenaFactory;
-import net.caseif.flint.lobby.LobbySign;
-import net.caseif.flint.minigame.Minigame;
 import net.caseif.flint.round.Round;
 
 import com.google.inject.Inject;
@@ -56,7 +50,7 @@ import java.io.File;
 /**
  * The Inferno Sponge plugin.
  */
-@Plugin(id = "inferno", description = "The Sponge implementation of the Flint engine.")
+@Plugin(id = "inferno", name = "Inferno", description = "The Sponge implementation of the Flint engine.")
 public final class InfernoPlugin {
 
     private static InfernoPlugin instance;
