@@ -5,9 +5,9 @@ plugins {
 
     id 'signing'
 
-    id 'org.spongepowered.plugin' version '0.8.1'
+    id 'org.spongepowered.plugin' version '0.9.0'
     id 'net.minecrell.licenser' version '0.4.1'
-    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 defaultTasks 'clean', 'updateLicenses', 'build'
 
@@ -88,7 +88,7 @@ checkstyle {
 }
 
 jar {
-    archiveClassifier.set('base')
+    classifier = 'base'
 }
 
 jar.manifest.mainAttributes(
@@ -107,7 +107,7 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadow]
-    archiveClassifier.set('')
+    classifier = ''
 
     dependencies {
         include dependency('net.caseif.flint.common:flintcommon')
@@ -120,7 +120,7 @@ shadowJar {
 task sourceJar(type: Jar) {
     from sourceSets.main.java
     from sourceSets.main.resources
-    archiveClassifier.set('sources')
+    classifier = 'sources'
 }
 
 artifacts {
@@ -133,5 +133,5 @@ signing {
 }
 
 wrapper {
-    gradleVersion = '5.4.1'
+    gradleVersion = '4.10.3'
 }
